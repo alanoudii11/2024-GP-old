@@ -208,6 +208,7 @@ const confirmIOSDate =() =>{
     </View>
   )
 }*/
+
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Alert, ScrollView, Platform, StyleSheet } from 'react-native';
 import { themeColors } from '../theme';
@@ -216,8 +217,23 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import TopNavBar2 from '../navigation/TopNavBar2';
+import { useNavigation } from '@react-navigation/native';
+import { Link } from 'react-router-dom';
 
 export default function SignUpScreen() {
+    const navigation = useNavigation();
+    const [user, setUser]= useState(
+        {
+        username: '',
+        email: '',
+        password:'',
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        birthdate: '',
+        city: '',
+        }
+    )
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -225,7 +241,6 @@ export default function SignUpScreen() {
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [birthdate, setBirthdate] = useState('');
-    const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -240,7 +255,7 @@ export default function SignUpScreen() {
             setDate(currentDate);
             if (Platform.OS === "android") {
                 toggleDatePicker();
-                setBirthdate(currentDate.toDateString());
+                setBirthdate(formatDate(currentDate));
             }
         } else {
             toggleDatePicker();
@@ -248,8 +263,44 @@ export default function SignUpScreen() {
     };
 
     const confirmIOSDate = () => {
-        setBirthdate(date.toDateString());
+        setBirthdate(formatDate(date));
         toggleDatePicker();
+    }
+
+    const formatDate =(rawDate)=>{
+        let date = new Date(rawDate);
+        let year = date.getFullYear();
+        let month = date.getMonth()+1;
+        let day = date.getDay();
+
+        month = month < 10 ? `0${month}`: month;
+        day = day < 10 ? `0${day}`: day;
+        
+        return `${day}-${month}-${year}`;
+    }
+
+    const handleSubmit = async () => {
+        if (email && password) {
+            try {
+                const authUser = await createUserWithEmailAndPassword(auth, email, password);
+                const userRef = firestore.collection('users').doc(authUser.user.uid);
+                await setDoc(userRef, {
+                    username: user.username,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    phoneNumber: user.phoneNumber,
+                    birthdate: user.birthdate,
+                    city: user.city
+                });
+            } catch (err) {
+                console.log('got error: ', err.message);
+                let msg = err.message;
+                if (msg.includes('auth/email-already-in-use')) msg = "Email already in use"
+                if (msg.includes('auth/invalid-email)')) msg = "Please use a valid email"
+                Alert.alert('Sign Up', err.message);
+            }
+        }
     }
    // validation 
  /* const handleSubmit = async () => {
@@ -271,7 +322,7 @@ export default function SignUpScreen() {
         Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
     }
 }*/
-    const handleSubmit = async () => {
+  /*  const handleSubmit = async () => {
         if (email && password) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
@@ -283,39 +334,39 @@ export default function SignUpScreen() {
                 Alert.alert('Sign Up', err.message);
             }
         }
-    }
+    }*/
 
     return (
         <View style={styles.container}>
             <TopNavBar2 />
             <ScrollView style={styles.scrollView}>
-                <View style={styles.formContainer}>
+                <View style={styles.formContainer }>
                     <Text style={styles.label}>الاسم الأول</Text>
                     <TextInput
                         style={styles.input}
                         value={firstName}
-                        onChangeText={value => setFirstName(value)}
+                        onChangeText={value => user.firstName}
                         placeholder='ادخل الاسم الأول'
                     />
                     <Text style={styles.label}>الاسم الأخير</Text>
                     <TextInput
                         style={styles.input}
                         value={lastName}
-                        onChangeText={value => setLastName(value)}
+                        onChangeText={value => user.lastName}
                         placeholder='ادخل الاسم الأخير'
                     />
                     <Text style={styles.label}>اسم المستخدم</Text>
                     <TextInput
                         style={styles.input}
                         value={username}
-                        onChangeText={value => setUsername(value)}
+                        onChangeText={value => user.username}
                         placeholder='ادخل اسم المستخدم'
                     />
                     <Text style={styles.label}>البريد الالكتروني</Text>
                     <TextInput
                         style={styles.input}
                         value={email}
-                        onChangeText={value => setEmail(value)}
+                        onChangeText={value => user.email}
                         placeholder='ادخل بريدك الالكتروني'
                     />
                     <Text style={styles.label}>كلمة المرور</Text>
@@ -323,15 +374,15 @@ export default function SignUpScreen() {
                         style={styles.input}
                         secureTextEntry
                         value={password}
-                        onChangeText={value => setPassword(value)}
+                        onChangeText={value => user.password}
                         placeholder='ادخل كلمة المرور'
                     />
                     <Text style={styles.label}>رقم الجوال</Text>
                     <TextInput
                         style={styles.input}
                         value={phoneNumber}
-                        onChangeText={value => setPhoneNumber(value)}
-                        placeholder='ادخل رقم الجوال'
+                        onChangeText={value => user.phoneNumber}
+                        placeholder='05XXXXXXXX'
                     />
                     <Text style={styles.label}>تاريخ الميلاد</Text>
                     {showPicker && (
@@ -342,12 +393,20 @@ export default function SignUpScreen() {
                             onChange={onChange}
                             maximumDate={new Date('2009-1-1')}
                             minimumDate={new Date('1940-1-1')}
+                            style={styles.datePicker}
                         />
                     )}
+
+                    
                     {showPicker && Platform.OS === "ios" && (
                         <View style={styles.iosCancelButton}>
-                            <TouchableOpacity onPress={confirmIOSDate}>
+                            <TouchableOpacity onPress={toggleDatePicker} style={[styles.button,
+                            styles.pickerButton,{backgroundColor:'lightgray'}]} >
                                 <Text>الغاء</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={confirmIOSDate} style={[styles.button,
+                            styles.pickerButton]} >
+                                <Text>تأكيد</Text>
                             </TouchableOpacity>
                         </View>
                     )}
@@ -359,22 +418,17 @@ export default function SignUpScreen() {
                                 value={birthdate}
                                 placeholder='ادخل تاريخ الميلاد'
                                 editable={false}
+                                onPressIn={toggleDatePicker}
                             />
                         </TouchableOpacity>
                     )}
 
-                    <Text style={styles.label}>الدولة</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={country}
-                        onChangeText={value => setCountry(value)}
-                        placeholder='ادخل اسم الدولة'
-                    />
+ 
                     <Text style={styles.label}>المدينة</Text>
                     <TextInput
                         style={styles.input}
                         value={city}
-                        onChangeText={value => setCity(value)}
+                        onChangeText={value => user.city}
                         placeholder='ادخل اسم المدينة'
                     />
                     <TouchableOpacity
@@ -400,21 +454,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: themeColors.bg,
+        
     },
     scrollView: {
         flex: 1,
+        
     },
     formContainer: {
         flex: 1,
         backgroundColor: 'white',
         paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingTop: 30,
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
+        paddingBottom:50,
+        justifyContent: 'space-around',
+        
     },
     label: {
         color: '#555',
-        marginLeft: 20,
+        marginRight:15 ,
+        textAlign: 'right',
+        marginTop:16,
     },
     input: {
         padding: 15,
@@ -422,12 +483,14 @@ const styles = StyleSheet.create({
         color: '#555',
         borderRadius: 20,
         marginBottom: 10,
+        textAlign: 'right',
+        marginTop:10,
     },
     button: {
         padding: 15,
         backgroundColor: themeColors.lightb,
         borderRadius: 20,
-        marginTop: 10,
+        marginTop: 25,
     },
     buttonText: {
         fontSize: 20,
@@ -438,7 +501,7 @@ const styles = StyleSheet.create({
     signInContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 25,
     },
     signInText: {
         fontWeight: 'bold',
@@ -450,6 +513,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     iosCancelButton: {
-        // iOS cancel button style here
+        flexDirection: 'row',
+        justifyContent:'space-around',
+    },
+    pickerButton:{
+        paddingHorizontal:20,
     },
 });

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-native-community/datetimepicker": "7.6.1",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
@@ -28,7 +29,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "14.1.0",
-    "@react-native-community/datetimepicker": "7.6.1"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

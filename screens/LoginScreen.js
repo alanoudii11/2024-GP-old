@@ -174,25 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-  backButton: {
-    backgroundColor: themeColors.lightb, 
-    padding: 8,
-    borderRadius: 50,
-  },
-  logoContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 50,
-  },
+
   content: {
     flex: 1,
     paddingHorizontal: 24,
@@ -204,21 +186,25 @@ const styles = StyleSheet.create({
   emailLabel: {
     fontSize: 16,
     marginBottom: 8,
+    textAlign: 'right',
   },
   emailInput: {
     padding: 12,
     backgroundColor: '#f2f2f2',
     borderRadius: 8,
+    textAlign: 'right',
   },
   passwordLabel: {
     fontSize: 16,
     marginTop: 16,
     marginBottom: 8,
+    textAlign: 'right',
   },
   passwordInput: {
     padding: 12,
     backgroundColor: '#f2f2f2',
     borderRadius: 8,
+    textAlign: 'right',
   },
   forgotPassword: {
     marginTop: 8,
