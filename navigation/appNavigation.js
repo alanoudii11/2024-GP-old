@@ -12,6 +12,8 @@ import RecommendationsScreen from '../screens/RecommendationsScreen';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
 import AlertsScreen from '../screens/AlertsScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import ConnectScreen from '../screens/ConnectScreen';
+import ConnectSteps from '../screens/ConnectSteps';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +34,8 @@ export default function AppNavigation() {
           <Stack.Screen name="Settings" options={{headerShown: false}} component={SettingsScreen} />
           <Stack.Screen name="Alerts" options={{headerShown: false}} component={AlertsScreen} />
           <Stack.Screen name="EditProfile" options={{headerShown: false}} component={EditProfileScreen} />
+          <Stack.Screen name="ConnectScreen" options={{headerShown: false}} component={ConnectScreen} />
+          <Stack.Screen name="ConnectSteps" options={{headerShown: false}} component={ConnectSteps} />
 
         </Stack.Navigator>
       </NavigationContainer>

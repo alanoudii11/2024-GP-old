@@ -219,11 +219,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import TopNavBar2 from '../navigation/TopNavBar2';
 import { useNavigation } from '@react-navigation/native';
 import { Link } from 'react-router-dom';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 export default function SignUpScreen() {
     const navigation = useNavigation();
-    const [user, setUser]= useState(
-        {
+    const [user, setUser]= useState({
         username: '',
         email: '',
         password:'',
@@ -232,8 +233,8 @@ export default function SignUpScreen() {
         phoneNumber: '',
         birthdate: '',
         city: '',
-        }
-    )
+    });
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -245,6 +246,15 @@ export default function SignUpScreen() {
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
 
+    const saveUserDataToFirestore = async (userData) => {
+        try {
+            await setDoc(doc(db, 'users', userData.username), userData);
+            console.log('User data saved to Firestore successfully');
+        } catch (error) {
+            console.error('Error saving user data to Firestore:', error);
+            // Handle error if necessary
+        }
+    };
     const toggleDatePicker = () => {
         setShowPicker(!showPicker);
     };
@@ -278,33 +288,54 @@ export default function SignUpScreen() {
         
         return `${day}-${month}-${year}`;
     }
-
     const handleSubmit = async () => {
-        if (email && password) {
-            try {
-                const authUser = await createUserWithEmailAndPassword(auth, email, password);
-                const userRef = firestore.collection('users').doc(authUser.user.uid);
-                await setDoc(userRef, {
-                    username: user.username,
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    phoneNumber: user.phoneNumber,
-                    birthdate: user.birthdate,
-                    city: user.city
-                });
-            } catch (err) {
-                console.log('got error: ', err.message);
-                let msg = err.message;
-                if (msg.includes('auth/email-already-in-use')) msg = "Email already in use"
-                if (msg.includes('auth/invalid-email)')) msg = "Please use a valid email"
-                Alert.alert('Sign Up', err.message);
+        if (email && password && firstName && lastName && phoneNumber && birthdate && city) {
+            if (phoneNumber.length === 10 && phoneNumber.startsWith('05')) {
+                try {
+                    // Create user with email and password
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    // If user is successfully created, save additional data to Firestore
+                    if (userCredential && userCredential.user) {
+                        await saveUserDataToFirestore({
+                            username: user.username,
+                            email: user.email,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            phoneNumber: user.phoneNumber,
+                            birthdate: user.birthdate,
+                            city: user.city,
+                        });
+                        // Reset form after successful sign up
+                        setUser({
+                            username: '',
+                            email: '',
+                            password:'',
+                            firstName: '',
+                            lastName: '',
+                            phoneNumber: '',
+                            birthdate: '',
+                            city: '',
+                        });
+                        Alert.alert('تسجيل', 'تم إنشاء الحساب بنجاح');
+                    }
+                } catch (err) {
+                    console.log('حدث خطأ: ', err.message);
+                    let msg = err.message;
+                    if (msg.includes('auth/email-already-in-use')) msg = "البريد الإلكتروني مستخدم بالفعل"
+                    if (msg.includes('auth/invalid-email)')) msg = "يرجى استخدام بريد إلكتروني صحيح"
+                    Alert.alert('تسجيل', err.message);
+                }
+            } else {
+                Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
             }
+        } else {
+            Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
         }
-    }
+    };
+
    // validation 
  /* const handleSubmit = async () => {
-    if (email && password && firstName && lastName && phoneNumber && birthdate && country && city) {
+    if (email && password && firstName && lastName && phoneNumber && birthdate && city) {
         if (phoneNumber.length === 10 && phoneNumber.startsWith('05')) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
@@ -345,28 +376,28 @@ export default function SignUpScreen() {
                     <TextInput
                         style={styles.input}
                         value={firstName}
-                        onChangeText={value => user.firstName}
+                        onChangeText={value => setFirstName(value)}
                         placeholder='ادخل الاسم الأول'
                     />
                     <Text style={styles.label}>الاسم الأخير</Text>
                     <TextInput
                         style={styles.input}
                         value={lastName}
-                        onChangeText={value => user.lastName}
+                        onChangeText={value => setLastName(value)}
                         placeholder='ادخل الاسم الأخير'
                     />
                     <Text style={styles.label}>اسم المستخدم</Text>
                     <TextInput
                         style={styles.input}
                         value={username}
-                        onChangeText={value => user.username}
+                        onChangeText={value => setUsername(value)}
                         placeholder='ادخل اسم المستخدم'
                     />
                     <Text style={styles.label}>البريد الالكتروني</Text>
                     <TextInput
                         style={styles.input}
                         value={email}
-                        onChangeText={value => user.email}
+                        onChangeText={value => setEmail(value)}
                         placeholder='ادخل بريدك الالكتروني'
                     />
                     <Text style={styles.label}>كلمة المرور</Text>
@@ -374,14 +405,14 @@ export default function SignUpScreen() {
                         style={styles.input}
                         secureTextEntry
                         value={password}
-                        onChangeText={value => user.password}
+                        onChangeText={value => setPassword(value)}
                         placeholder='ادخل كلمة المرور'
                     />
                     <Text style={styles.label}>رقم الجوال</Text>
                     <TextInput
                         style={styles.input}
                         value={phoneNumber}
-                        onChangeText={value => user.phoneNumber}
+                        onChangeText={value => setPhoneNumber(value)}
                         placeholder='05XXXXXXXX'
                     />
                     <Text style={styles.label}>تاريخ الميلاد</Text>
@@ -428,7 +459,7 @@ export default function SignUpScreen() {
                     <TextInput
                         style={styles.input}
                         value={city}
-                        onChangeText={value => user.city}
+                        onChangeText={value => setCity(value)}
                         placeholder='ادخل اسم المدينة'
                     />
                     <TouchableOpacity

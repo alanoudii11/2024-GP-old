@@ -6,7 +6,7 @@ import { auth } from '../config/firebase'
 import TopNavBar from '../navigation/TopNavBar';
 import BottomNavBar from '../navigation/BottomNavBar';
 import { themeColors } from '../theme';
-
+import * as Icons from "react-native-heroicons/solid";
 
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState('');
@@ -31,7 +31,6 @@ export default function HomeScreen() {
   <View style={styles.container}>
   <SafeAreaView style={[styles.safeAreaView, { flex: 1, backgroundColor: themeColors.bg }]}>
                 <View style={styles.dateContainer}>
-                    {/*<Text>السبت ٢٤ فبراير ٢٠٢٤ ٣:٣٤ م </Text>*/}
                     <Text style={styles.dateStyle}>{currentDate}</Text>
                 </View>
                 <View style={styles.infoContainer}>
@@ -53,6 +52,7 @@ export default function HomeScreen() {
       <BottomNavBar/>
 
   </View>
+  
   );
 }
 const styles = StyleSheet.create({
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
       flex: 1,
-      paddingHorizontal: 20, // Add horizontal padding
+      paddingHorizontal: 20,
     
   },
   dateContainer: {
@@ -76,20 +76,24 @@ const styles = StyleSheet.create({
       maxWidth: 346,
   },
   dateStyle:{
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 16,
 
   },
-  /*infoContainer: {
+  infoContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: 4,
       paddingVertical: 2,
-  },*/
+      
+  },
   infoBox: {
       flex: 1,
-      padding: 3,
+      padding: 7,
       borderRadius: 20,
       backgroundColor: 'rgba(192, 192, 192, 0.4)', // Neutral-300 with opacity 40%
+      margin:10,
   },
   infoText: {
       color: '#fff',
@@ -100,7 +104,8 @@ const styles = StyleSheet.create({
       fontSize: 40,
       textAlign: 'center',
   },
- 
+
+  
 });
 
 //<Text className="text-lg">Home Page - </Text>
