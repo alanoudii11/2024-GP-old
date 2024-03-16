@@ -79,7 +79,7 @@ export default function SettingsScreen() {
 
         <TouchableOpacity
           onPress={handlePressEditProfile} style={[styles.button, { marginTop: 20}]}>
-          <Text style={styles.buttonText}>معلوماتي الشخصية</Text>
+          <Text style={styles.buttonText}>الملف الشخصي</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'right', // Align text to start from the right
   },
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
   logoutText: {
     color: 'red',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
     textDecorationLine: 'underline', // Underline the text
 
   },

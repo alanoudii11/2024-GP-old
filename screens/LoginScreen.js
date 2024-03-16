@@ -207,7 +207,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   forgotPassword: {
-    marginTop: 8,
+    marginTop: 12,
+    marginBottom: 30,
+    
   },
   forgotPasswordText: {
     color: themeColors.lightb, 
@@ -234,6 +236,7 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     marginRight: 8,
+    fontWeight: '600'
   },
   signUpLink: {
     color: themeColors.lightb, 

@@ -285,7 +285,7 @@ export default function SignUpScreen() {
                         style={styles.button}
                         onPress={handleSubmit}
                     >
-                        <Text style={styles.buttonText}>انشاء حساب</Text>
+                        <Text style={styles.buttonText}>إنشاء حساب</Text>
                     </TouchableOpacity>
                     <View style={styles.signInContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: '#f2f2f2',
         color: '#555',
-        borderRadius: 20,
+        borderRadius: 8,
         marginBottom: 10,
         textAlign: 'right',
         marginTop:10,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: '#555',
+        color: 'black',
     },
     signInContainer: {
         flexDirection: 'row',
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
     orText: {
-        color: '#888',
+        color: 'black',
         fontWeight: 'bold',
     },
     iosCancelButton: {
