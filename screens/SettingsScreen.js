@@ -6,14 +6,21 @@ import * as Icons from "react-native-heroicons/solid";
 import { themeColors } from '../theme'
 import { useNavigation } from '@react-navigation/native'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth, db } from '../config/firebase'
+import { auth} from '../config/firebase'
 import EditProfileScreen from '../screens/EditProfileScreen';
 import { signOut } from 'firebase/auth'
+import { db } from '../config/firebase';
+import { useEffect } from 'react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+
 
 
 
 import TopNavBar from '../navigation/TopNavBar';
 import BottomNavBar from '../navigation/BottomNavBar';
+
+
+
 
 export default function SettingsScreen() {
 
@@ -28,7 +35,30 @@ export default function SettingsScreen() {
     await signOut(auth);
   }
 
-  const name = "User";
+  const [firstName, setFirstName] = useState('');
+
+
+  useEffect(() => {
+    // Fetch user data from Firestore
+    const fetchUserData = async () => {
+        try {
+            const usersRef = collection(db, 'users');
+            const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
+
+            if (!querySnapshot.empty) {
+                // Assuming there's only one document for each user
+                const userData = querySnapshot.docs[0].data();
+                setFirstName(userData.firstName);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    fetchUserData();
+}, []);
+
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -39,7 +69,7 @@ export default function SettingsScreen() {
     <View style={{ flex: 1 }}>
           {/* Hello, [name] text */}
           <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>مرحبا, {name}</Text>
+        <Text style={styles.greetingText}>مرحبا, {firstName}</Text>
         <Text style={styles.descriptionText}>إعدادات الحساب</Text>
 
       </View>

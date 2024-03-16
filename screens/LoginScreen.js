@@ -211,6 +211,8 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     color: themeColors.lightb, 
+    textDecorationLine: 'underline' 
+
   },
   loginButton: {
     backgroundColor: themeColors.lightb, 

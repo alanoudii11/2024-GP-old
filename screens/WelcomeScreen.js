@@ -28,7 +28,7 @@ export default function WelcomeScreen() {
             className="py-3 mx-7 rounded-xl"
             style={{ backgroundColor: themeColors.lightb }}
           >
-            <Text className="text-xl font-bold text-center text-gray-700">
+            <Text className="text-xl font-bold text-center text-black-700" style={styles.buttonText}>
               ابدأ الان
             </Text>
           </TouchableOpacity>
@@ -58,9 +58,11 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 18,
+    fontSize: 16,
     marginTop: 250,
-  }
+  },
+
+  buttonText: { fontSize: 18}
 });
 
 //modified code putting white border down but there is an error

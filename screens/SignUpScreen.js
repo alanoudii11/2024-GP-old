@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { doc, setDoc,collection, addDoc,query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
+
 export default function SignUpScreen() {
     const navigation = useNavigation();
     const [user, setUser]= useState({
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
         
     },
     label: {
-        color: '#555',
+        color: 'black',
         marginRight:15 ,
         textAlign: 'right',
         marginTop:16,
