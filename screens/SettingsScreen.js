@@ -12,7 +12,7 @@ import { signOut } from 'firebase/auth'
 import { db } from '../config/firebase';
 import { useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-
+import { useIsFocused } from '@react-navigation/native';
 
 
 
@@ -25,6 +25,7 @@ import BottomNavBar from '../navigation/BottomNavBar';
 export default function SettingsScreen() {
 
   const navigation = useNavigation();
+    const isFocused = useIsFocused();
 
 
   const handlePressEditProfile = () => {
@@ -38,25 +39,26 @@ export default function SettingsScreen() {
   const [firstName, setFirstName] = useState('');
 
 
-  useEffect(() => {
-    // Fetch user data from Firestore
-    const fetchUserData = async () => {
-        try {
-            const usersRef = collection(db, 'users');
-            const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
+  const fetchUserData = async () => {
+    try {
+        const usersRef = collection(db, 'users');
+        const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
 
-            if (!querySnapshot.empty) {
-                // Assuming there's only one document for each user
-                const userData = querySnapshot.docs[0].data();
-                setFirstName(userData.firstName);
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
+        if (!querySnapshot.empty) {
+            // Assuming there's only one document for each user
+            const userData = querySnapshot.docs[0].data();
+            setFirstName(userData.firstName);
         }
-    };
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+};
 
-    fetchUserData();
-}, []);
+useEffect(() => {
+    if (isFocused) {
+        fetchUserData();
+    }
+}, [isFocused]);
 
 
 

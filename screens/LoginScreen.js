@@ -102,17 +102,26 @@ import { useNavigation } from '@react-navigation/native'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../config/firebase'
 import TopNavBar2 from '../navigation/TopNavBar2';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false); // State for Remember Me toggle
+
 
   const handleSubmit = async () => {
     if (email && password) {
       try {
         await signInWithEmailAndPassword(auth, email, password);
+        if (rememberMe) {
+          // Save user session to local storage
+          await AsyncStorage.setItem('rememberedUser', JSON.stringify({ email }));
+        }
       } catch (err) {
         console.log('got error: ', err.message);
         let msg = err.message;
@@ -122,6 +131,17 @@ export default function LoginScreen() {
       }
     }
   }
+
+  const toggleRememberMe = () => {
+    setRememberMe(!rememberMe);
+  }
+
+  const RememberMeButton = ({ rememberMe, toggleRememberMe }) => (
+    <TouchableOpacity style={styles.rememberMeButton} onPress={toggleRememberMe}>
+    <Text style={styles.rememberMeButtonText}>{rememberMe ? 'تذكرني' : 'تذكرني'}</Text>
+    <View style={[styles.rememberMeIndicator, rememberMe ? styles.rememberMeIndicatorActive : null]} />
+  </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -144,9 +164,14 @@ export default function LoginScreen() {
             value={password}
             onChangeText={value => setPassword(value)}
           />
-          <TouchableOpacity style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>نسيت كلمة المرور؟</Text>
-          </TouchableOpacity>
+            
+            <View style={styles.rowContainer}>
+  <TouchableOpacity style={styles.forgotPassword}>
+    <Text style={styles.forgotPasswordText}>نسيت كلمة المرور؟</Text>
+  </TouchableOpacity>
+  <RememberMeButton rememberMe={rememberMe} toggleRememberMe={toggleRememberMe} />
+</View>
+
           <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
             <Text style={styles.loginButtonText}>تسجيل الدخول</Text>
           </TouchableOpacity>
@@ -207,13 +232,13 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   forgotPassword: {
-    marginTop: 12,
-    marginBottom: 30,
-    
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   forgotPasswordText: {
     color: themeColors.lightb, 
-    textDecorationLine: 'underline' 
+    textDecorationLine: 'underline',
+    fontSize: 16,
 
   },
   loginButton: {
@@ -241,6 +266,37 @@ const styles = StyleSheet.create({
   signUpLink: {
     color: themeColors.lightb, 
     textDecorationLine: 'underline',
+  },
+   rememberMeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 10,
+
+  },
+  rememberMeIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginLeft: 8, // Adjust margin to create space between text and indicator
+    borderColor: themeColors.lightb, // Border color
+  },
+  rememberMeIndicatorActive: {
+    backgroundColor: themeColors.lightb, // Change to desired color when active
+  },
+  rememberMeButtonText: {
+    fontSize: 16,
+    color: themeColors.lightb,
+
+  },
+  rowContainer: {
+       flexDirection: 'row',
+    justifyContent: 'space-between', // Adjusted justifyContent
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 10,
+
   },
 });
 

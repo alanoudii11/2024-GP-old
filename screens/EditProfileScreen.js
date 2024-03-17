@@ -1,5 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView } from 'react-native';
 import React from 'react'
+import { themeColors } from '../theme';
 import * as Icons from "react-native-heroicons/solid";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { signOut } from 'firebase/auth'
@@ -10,6 +11,8 @@ import { useNavigation } from '@react-navigation/native'
 import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useEffect, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function EditProfileScreen() {
@@ -42,6 +45,9 @@ export default function EditProfileScreen() {
         if (!querySnapshot.empty) {
           const userData = querySnapshot.docs[0].data();
           setUserData(userData);
+        } else {
+          console.error('Document not found');
+          // Handle this case, e.g., display an error message or create a new document
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -52,28 +58,114 @@ export default function EditProfileScreen() {
     fetchUserData();
 
   }, []);
+  
+  const [birthdate, setBirthdate] = useState('');
+
+    const [showPicker, setShowPicker] = useState(false);
+    const [date, setDate] = useState(new Date());
+
+    const toggleDatePicker = () => {
+        setShowPicker(!showPicker);
+    };
+
+    const onChange = ({ type }, selectedDate) => {
+      if (type === 'set') {
+          const currentDate = selectedDate || date;
+          setDate(currentDate);
+          if (Platform.OS === "android") {
+              toggleDatePicker();
+              setBirthdate(formatDate(currentDate));
+              // Update userData with selected birthdate
+              setUserData(prevState => ({ ...prevState, birthdate: formatDate(currentDate) }));
+          }
+      } else {
+          toggleDatePicker();
+      }
+  };
+  
+  const confirmIOSDate = () => {
+      setBirthdate(formatDate(date));
+      toggleDatePicker();
+      // Update userData with selected birthdate
+      setUserData(prevState => ({ ...prevState, birthdate: formatDate(date) }));
+  }
+
+    const formatDate = (rawDate) => {
+        const formattedDate = new Date(rawDate);
+        const year = formattedDate.getFullYear();
+        const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = formattedDate.getDate().toString().padStart(2, '0');
+
+        return `${day}-${month}-${year}`;
+    }
 
   const handleUpdateProfile = async () => {
     try {
-      const userRef = doc(db, 'users', auth.currentUser.uid);
-      await updateDoc(userRef, {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        username: userData.username,
-        email: userData.email,
-        phoneNumber: userData.phoneNumber,
-        city:userData.city,
-        birthdate: userData.birthdate
-        // Add more fields as needed
-      });
-      Alert.alert('تم تحديث الملف الشخصي', 'تم تحديث معلوماتك بنجاح.');
-      // Optionally, navigate back to the profile screen or any other screen
-    } catch (error) {
-      console.error('Error updating user data:', error);
-      // Handle error, e.g., show an error message
-    }
-  };
+      if (!auth.currentUser) {
+        console.error('User is not authenticated');
+        return;
+      }
 
+      const uid = auth.currentUser.uid;
+
+      // Validate fields
+      const { firstName, lastName, username, email, phoneNumber, city, birthdate } = userData;
+
+      if (!firstName || !lastName || !username || !email || !phoneNumber || !city || !birthdate) {
+        Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
+        return;
+      }
+
+      // Validate phone number format
+      if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
+        Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
+        return;
+      }
+      
+
+      
+      const usersRef = collection(db, 'users');
+      const querySnapshot = await getDocs(query(usersRef, where('uid', '==', uid)));
+  
+      if (!querySnapshot.empty) {
+        const docSnapshot = querySnapshot.docs[0];
+        const userId = docSnapshot.id; // Get the Firestore-assigned document ID
+
+        console.log('Document ID:', userId); // Log document ID
+
+        
+        // Update the Firestore document with the latest user data from the state
+        await updateDoc(doc(db, 'users', userId), userData);
+
+        // Log the updated user data
+        console.log('User data after update:', userData);
+
+      
+      Alert.alert('تم تحديث الملف الشخصي', 'تم تحديث معلوماتك بنجاح.', [
+        {
+            text: 'OK',
+            onPress: () => {
+                // Pass the updated first name as a parameter when navigating to SettingsScreen
+                navigation.navigate('Settings', { updatedFirstName: userData.firstName });
+            },
+        },
+    ]);
+    
+    } else {
+      console.error('No user document found with the provided UID.');
+    }
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    Alert.alert('خطأ', 'حدث خطأ أثناء تحديث الملف الشخصي.');
+  }
+};
 
 return (
     <View style={{ flex: 1 }}>
@@ -96,7 +188,11 @@ return (
       <TextInput
         style={styles.input}
         placeholder={userData.firstName}
-        onChangeText={value => setUserData(prevState => ({ ...prevState, firstName: value }))}
+        onChangeText={value => {
+          console.log('Previous userData:', userData);
+          setUserData(prevState => ({ ...prevState, firstName: value }));
+          console.log('Updated userData:', userData);
+        }}
       />
       <Text style={styles.label}>الاسم الأخير</Text>
       <TextInput
@@ -132,11 +228,40 @@ return (
       />
 
 <Text style={styles.label}>تاريخ الميلاد  </Text>
-      <TextInput
-        style={styles.input}
-        placeholder={userData.birthdate}
-        onChangeText={value => setUserData(prevState => ({ ...prevState, birthdate: value }))}
-      />
+{showPicker && (
+    <DateTimePicker
+        mode='date'
+        display='spinner'
+        value={date}
+        onChange={onChange}
+        maximumDate={new Date('2009-1-1')}
+        minimumDate={new Date('1940-1-1')}
+        style={styles.datePicker}
+    />
+)}
+
+{showPicker && Platform.OS === "ios" && (
+    <View style={styles.iosCancelButton}>
+        <TouchableOpacity onPress={toggleDatePicker} style={[styles.button, styles.pickerButton, { backgroundColor: 'lightgray' }]}>
+            <Text>الغاء</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={confirmIOSDate} style={[styles.button, styles.pickerButton]}>
+            <Text>تأكيد</Text>
+        </TouchableOpacity>
+    </View>
+)}
+
+{!showPicker && (
+    <TouchableOpacity onPress={toggleDatePicker}>
+        <TextInput
+            style={styles.input}
+            value={birthdate}
+            placeholder={userData.birthdate} // Placeholder set to userData.birthdate
+            editable={false}
+            onPressIn={toggleDatePicker}
+        />
+    </TouchableOpacity>
+)}
 
       <TouchableOpacity onPress={handleUpdateProfile}>
         <Text style={styles.buttonText}>تحديث الملف الشخصي</Text>
@@ -212,6 +337,19 @@ const styles = StyleSheet.create({
     color: '#82C8FF',
     paddingVertical: 35,
   },
+  iosCancelButton: {
+    flexDirection: 'row',
+    justifyContent:'space-around',
+},
+pickerButton:{
+    paddingHorizontal:20,
+},
+button: {
+  padding: 15,
+  backgroundColor: themeColors.lightb,
+  borderRadius: 20,
+  marginTop: 25,
+},
 
 });
 
