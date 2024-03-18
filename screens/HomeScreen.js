@@ -7,7 +7,7 @@ import TopNavBar from '../navigation/TopNavBar';
 import BottomNavBar from '../navigation/BottomNavBar';
 import { themeColors } from '../theme';
 import * as Icons from "react-native-heroicons/solid";
-
+import RealTimeBarChart from '../navigation/RealTimeBarChart'
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState('');
 
@@ -45,6 +45,10 @@ export default function HomeScreen() {
                         <Text style={styles.infoText}>ك.و.س</Text>
                     </View>
                 </View>
+            </SafeAreaView>
+            <SafeAreaView style={styles.safeAreaView}>
+            
+              <RealTimeBarChart/>
             </SafeAreaView>
             
       </View>
@@ -107,8 +111,3 @@ const styles = StyleSheet.create({
 
   
 });
-
-//<Text className="text-lg">Home Page - </Text>
-        //<TouchableOpacity onPress={handleLogout} className="p-1 bg-red-400 rounded-lg">
-          //<Text className="text-white text-lg font-bold">تسجيل الخروج</Text>
-        //</TouchableOpacity>
