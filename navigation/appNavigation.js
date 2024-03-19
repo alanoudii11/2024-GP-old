@@ -14,6 +14,7 @@ import AlertsScreen from '../screens/AlertsScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ConnectScreen from '../screens/ConnectScreen';
 import ConnectSteps from '../screens/ConnectSteps';
+import ForgetPasswordScreen from '../screens/ForgetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,7 @@ export default function AppNavigation() {
           <Stack.Screen name="Welcome" options={{headerShown: false}} component={WelcomeScreen} />
           <Stack.Screen name="Login" options={{headerShown: false}} component={LoginScreen} />
           <Stack.Screen name="SignUp" options={{headerShown: false}} component={SignUpScreen} />
+          <Stack.Screen name="ForgetPassword" options={{headerShown: false}} component={ForgetPasswordScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )
