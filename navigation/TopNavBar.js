@@ -24,7 +24,7 @@ export default function TopNavBar() {
         <View style={styles.navBar}>
           
           <TouchableOpacity onPress={handlePressAlerts} style={styles.alertsContainer}>
-            <Image source={require('../assets/icons/alerts.png')} style={styles.alertsIcon} />
+            <Image source={require('../assets/icons/newalerts.png')} style={styles.alertsIcon} />
           </TouchableOpacity>
           
           <View style={styles.logoContainer}>
@@ -75,7 +75,8 @@ export default function TopNavBar() {
     },
 
     alertsIcon: {
-
+      width: 30,
+      height: 35,
     }
 
   });

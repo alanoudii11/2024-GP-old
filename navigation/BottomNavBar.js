@@ -36,16 +36,16 @@ export default function BottomNavBar() {
         <View style={styles.container}>
         <View style={styles.navBarBottom}>
         <TouchableOpacity onPress={handlePressSettings}>
-            <Image source={require('../assets/icons/settings.png')} style={styles.logo} />
+            <Image source={require('../assets/icons/newsettings.png')} style={styles.logo} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressRecommendations}>
-            <Image source={require('../assets/icons/recommendations.png')} style={styles.logo} />
+            <Image source={require('../assets/icons/newrecommendations.png')} style={styles.logo} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressAnalytics}>
-            <Image source={require('../assets/icons/analytics.png')} style={styles.logo} />
+            <Image source={require('../assets/icons/newanalytics.png')} style={styles.logo} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePressHome}>
-            <Image source={require('../assets/icons/home.png')} style={styles.logo} />
+            <Image source={require('../assets/icons/newhome.png')} style={styles.logo} />
         </TouchableOpacity>
         </View>
         </View>
@@ -69,10 +69,13 @@ export default function BottomNavBar() {
     paddingHorizontal: 20,
     top: 0,
     width: '100%',
+    paddingBottom: 13
+
+    
       },
       logo: {
         width: 53,
-        height: 53,
+        height: 50,
       },
       safeArea: {
         flex: 1,
