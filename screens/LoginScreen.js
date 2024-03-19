@@ -166,7 +166,7 @@ export default function LoginScreen() {
           />
             
             <View style={styles.rowContainer}>
-  <TouchableOpacity style={styles.forgotPassword}>
+  <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('ForgetPassword')}>
     <Text style={styles.forgotPasswordText}>نسيت كلمة المرور؟</Text>
   </TouchableOpacity>
   <RememberMeButton rememberMe={rememberMe} toggleRememberMe={toggleRememberMe} />
@@ -175,12 +175,15 @@ export default function LoginScreen() {
           <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
             <Text style={styles.loginButtonText}>تسجيل الدخول</Text>
           </TouchableOpacity>
+
+
           <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>مستخدم جديد؟</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text style={styles.signUpLink}>انشئ حساب</Text>
-            </TouchableOpacity>
-          </View>
+  <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+    <Text style={styles.signUpLink}>انشئ حساب</Text>
+  </TouchableOpacity>
+  <Text style={styles.signUpText}>مستخدم جديد؟</Text>
+</View>
+          
         </View>
       </SafeAreaView>
     </View>
@@ -197,7 +200,6 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
-    
   },
 
   content: {
@@ -258,14 +260,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 24,
+    
   },
   signUpText: {
     marginRight: 8,
-    fontWeight: '600'
+    fontWeight: '600',
+    marginLeft: 5,
   },
   signUpLink: {
     color: themeColors.lightb, 
     textDecorationLine: 'underline',
+    
   },
    rememberMeButton: {
     flexDirection: 'row',

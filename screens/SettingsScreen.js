@@ -12,7 +12,7 @@ import { signOut } from 'firebase/auth'
 import { db } from '../config/firebase';
 import { useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { useIsFocused } from '@react-navigation/native';
+
 
 
 
@@ -25,7 +25,6 @@ import BottomNavBar from '../navigation/BottomNavBar';
 export default function SettingsScreen() {
 
   const navigation = useNavigation();
-    const isFocused = useIsFocused();
 
 
   const handlePressEditProfile = () => {
@@ -39,26 +38,25 @@ export default function SettingsScreen() {
   const [firstName, setFirstName] = useState('');
 
 
-  const fetchUserData = async () => {
-    try {
-        const usersRef = collection(db, 'users');
-        const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
+  useEffect(() => {
+    // Fetch user data from Firestore
+    const fetchUserData = async () => {
+        try {
+            const usersRef = collection(db, 'users');
+            const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
 
-        if (!querySnapshot.empty) {
-            // Assuming there's only one document for each user
-            const userData = querySnapshot.docs[0].data();
-            setFirstName(userData.firstName);
+            if (!querySnapshot.empty) {
+                // Assuming there's only one document for each user
+                const userData = querySnapshot.docs[0].data();
+                setFirstName(userData.firstName);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
         }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-};
+    };
 
-useEffect(() => {
-    if (isFocused) {
-        fetchUserData();
-    }
-}, [isFocused]);
+    fetchUserData();
+}, []);
 
 
 
@@ -104,8 +102,9 @@ useEffect(() => {
   
 <View style={styles.logoutButtonPosition}>
   <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutText}>تسجيل خروج</Text>
-          </TouchableOpacity>
+    <Text style={styles.logoutText}>تسجيل خروج</Text>
+    <Image source={require('../assets/icons/signoutbutton.png')} style={styles.signoutbutton} />
+  </TouchableOpacity>
 </View>
 
 </View>
@@ -164,14 +163,15 @@ const styles = StyleSheet.create({
 
   logoutButton: {
     padding: 10,
-    //backgroundColor: 'red', no more
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Adjusted justifyContent
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 60,
   },
   logoutText: {
-    color: 'red',
+    color: '#BC2828',
     fontSize: 16,
     fontWeight: '500',
     textDecorationLine: 'underline', // Underline the text
@@ -183,6 +183,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end', // Align content to the end (right)
     paddingHorizontal: 20, // Add horizontal padding
 
+  },
+
+  signoutbutton:{
+    width: 30,
+    height: 30,
+    marginLeft: 5,
   }
  
 });
