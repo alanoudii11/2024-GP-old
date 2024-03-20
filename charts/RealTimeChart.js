@@ -1,6 +1,7 @@
-//---------------RealTimeCharts.js----------------------
-import React, { useEffect, useState } from 'react';
-import { Dimensions, View, Text } from 'react-native';
+//---------------RealTimeChart.js---------------
+
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 const RealTimeChart = ({ apiUrl }) => {
@@ -8,10 +9,10 @@ const RealTimeChart = ({ apiUrl }) => {
     labels: [],
     datasets: [{ data: [] }],
   });
-  const maxDataPoints = 60; // Maximum number of data points to display
+  const scrollViewRef = useRef();
 
   useEffect(() => {
-    let isMounted = true; // flag to check if the component is mounted
+    let isMounted = true;
 
     const fetchDataAndUpdateChart = async () => {
       if (!isMounted) return;
@@ -20,36 +21,31 @@ const RealTimeChart = ({ apiUrl }) => {
         const response = await fetch(apiUrl);
         const json = await response.json();
     
-        // Check if the expected data structure is not present
         if (typeof json !== 'object' || json === null) {
           console.error('Unexpected response structure:', json);
           throw new Error('Data is not an object or is null');
         }
-    
+
         let totalUsage = 0;
-        // Loop over each device in the response
         for (const deviceId in json) {
           const device = json[deviceId];
           if (device && typeof device === 'object' && device.channels) {
-            // Loop over each channel in the device
             for (const channelId in device.channels) {
               const channel = device.channels[channelId];
               if (channel && typeof channel === 'object' && !isNaN(channel.usage)) {
-                // Accumulate total usage if it's a number
                 totalUsage += Number(channel.usage);
               }
             }
           }
         }
-    
-        // Update chart data using the accumulated totalUsage
+
         const now = new Date();
         const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
         
         setChartData(prevChartData => {
           const dataLength = prevChartData.datasets[0].data.length;
-          const labels = dataLength >= maxDataPoints ? prevChartData.labels.slice(1) : prevChartData.labels;
-          const data = dataLength >= maxDataPoints ? prevChartData.datasets[0].data.slice(1) : prevChartData.datasets[0].data;
+          const labels = dataLength >= 120 ? prevChartData.labels.slice(1) : prevChartData.labels;
+          const data = dataLength >= 120 ? prevChartData.datasets[0].data.slice(1) : prevChartData.datasets[0].data;
           
           return {
             labels: [...labels, currentTime],
@@ -60,6 +56,9 @@ const RealTimeChart = ({ apiUrl }) => {
             ]
           };
         });
+
+        // Scroll to the end of the ScrollView to show the latest data
+        scrollViewRef.current.scrollToEnd({ animated: true });
     
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -75,19 +74,25 @@ const RealTimeChart = ({ apiUrl }) => {
   }, []);
 
   return (
-    <View>
-      {chartData.labels.length > 0 ? (
-        <LineChart
+    <ScrollView
+      horizontal
+      ref={scrollViewRef}
+      style={{ marginVertical: 10 }}
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+      showsHorizontalScrollIndicator={false}
+    >
+      <View>
+        {chartData.labels.length > 0 ? (
+          <LineChart
           data={chartData}
-          width={350}
+          width={Math.max(400, chartData.labels.length * 70)} // Increase the minimum width of the chart
           height={280}
-          yAxisLabel="kW"
           chartConfig={{
             backgroundColor: '#ffffff',
             backgroundGradientFrom: '#ffffff',
             backgroundGradientTo: '#ffffff',
             decimalPlaces: 6,
-            color: (opacity = 1) => `rgba(106, 201, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(0, 163, 255, ${opacity})`,
             style: {
               borderRadius: 16,
             },
@@ -97,12 +102,23 @@ const RealTimeChart = ({ apiUrl }) => {
             marginVertical: 0,
             borderRadius: 16,
           }}
-        />
-      ) : (
-        <Text>Fetching Data...</Text>
-      )}
-    </View>
+        />        
+        
+        ) : (
+          <Text style={styles.loadingText}>جاري إحضار البيانات..</Text>
+        )}
+      </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingText: {
+    textAlign: 'center', 
+    marginTop: 10, 
+    fontSize: 14, 
+    color: '#666', 
+  },
+});
 
 export default RealTimeChart;
