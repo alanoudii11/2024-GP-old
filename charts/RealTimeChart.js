@@ -1,4 +1,4 @@
-//---------------RealTimeChart.js---------------
+//---------------RealTimeChart.js----------------------
 
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
@@ -16,11 +16,11 @@ const RealTimeChart = ({ apiUrl }) => {
 
     const fetchDataAndUpdateChart = async () => {
       if (!isMounted) return;
-    
+
       try {
         const response = await fetch(apiUrl);
         const json = await response.json();
-    
+
         if (typeof json !== 'object' || json === null) {
           console.error('Unexpected response structure:', json);
           throw new Error('Data is not an object or is null');
@@ -41,12 +41,12 @@ const RealTimeChart = ({ apiUrl }) => {
 
         const now = new Date();
         const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-        
+
         setChartData(prevChartData => {
           const dataLength = prevChartData.datasets[0].data.length;
           const labels = dataLength >= 120 ? prevChartData.labels.slice(1) : prevChartData.labels;
           const data = dataLength >= 120 ? prevChartData.datasets[0].data.slice(1) : prevChartData.datasets[0].data;
-          
+
           return {
             labels: [...labels, currentTime],
             datasets: [
@@ -58,8 +58,10 @@ const RealTimeChart = ({ apiUrl }) => {
         });
 
         // Scroll to the end of the ScrollView to show the latest data
-        scrollViewRef.current.scrollToEnd({ animated: true });
-    
+        if (scrollViewRef.current) {
+          scrollViewRef.current.scrollToEnd({ animated: true });
+        }
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -84,26 +86,26 @@ const RealTimeChart = ({ apiUrl }) => {
       <View>
         {chartData.labels.length > 0 ? (
           <LineChart
-          data={chartData}
-          width={Math.max(400, chartData.labels.length * 70)} // Increase the minimum width of the chart
-          height={280}
-          chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
-            decimalPlaces: 6,
-            color: (opacity = 1) => `rgba(0, 163, 255, ${opacity})`,
-            style: {
+            data={chartData}
+            width={Math.max(400, chartData.labels.length * 70)} // Increase the minimum width of the chart
+            height={280}
+            chartConfig={{
+              backgroundColor: '#ffffff',
+              backgroundGradientFrom: '#ffffff',
+              backgroundGradientTo: '#ffffff',
+              decimalPlaces: 6,
+              color: (opacity = 1) => `rgba(0, 163, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 0,
               borderRadius: 16,
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 0,
-            borderRadius: 16,
-          }}
-        />        
-        
+            }}
+          />
+
         ) : (
           <Text style={styles.loadingText}>جاري إحضار البيانات..</Text>
         )}
@@ -114,10 +116,10 @@ const RealTimeChart = ({ apiUrl }) => {
 
 const styles = StyleSheet.create({
   loadingText: {
-    textAlign: 'center', 
-    marginTop: 10, 
-    fontSize: 14, 
-    color: '#666', 
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
   },
 });
 
