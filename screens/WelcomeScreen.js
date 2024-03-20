@@ -3,7 +3,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColors } from '../theme';
 import { useNavigation } from '@react-navigation/native';
-import * as Icons from "react-native-heroicons/solid";
+
 
 
 
