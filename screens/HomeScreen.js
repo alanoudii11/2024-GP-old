@@ -1,5 +1,5 @@
-//Problem: chart doesnt allow scrolling and swiping to vie historical data. 
-//---------------HomeScreen.js----------------------
+//---------------HomeScreen.js---------------
+
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -14,7 +14,7 @@ import SelectorBar from '../components/SelectorBar';
 
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState('');
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(2); // Default to the third option
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(4); //default selector bar choice is مباشر
   const options = ['سنة','شهر','أسبوع','يوم', 'مباشر'];
   const displayTextMapping = {
     0: 'استهلاك الكهرباء السنوي (ك.و.س)',
@@ -76,12 +76,12 @@ export default function HomeScreen() {
               setSelectedOptionIndex(index);
             }}
           />
-          {selectedOptionIndex === 4 && (
-            <RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />
-          )}
           <Text style={styles.chartHeaderText}>
             {getDisplayText(selectedOptionIndex)}
           </Text>
+          {selectedOptionIndex === 4 && (
+            <RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />
+          )}
         </View>
       </ScrollView>
       <BottomNavBar />
