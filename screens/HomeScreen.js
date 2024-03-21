@@ -17,11 +17,11 @@ export default function HomeScreen() {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(4); //default selector bar choice is مباشر
   const options = ['سنة','شهر','أسبوع','يوم', 'مباشر'];
   const displayTextMapping = {
-    0: 'استهلاك الكهرباء السنوي (ك.و.س)',
-    1: 'استهلاك الكهرباء الشهري (ك.و.س)',
-    2: 'استهلاك الكهرباء الأسبوعي (ك.و.س)',
-    3: 'استهلاك الكهرباء اليومي (ك.و.س)',
-    4: 'استهلاك الكهرباء المباشر (ك.و.س)'
+    0: 'استهلاك الكهرباء السنوي (كيلو واط/ساعة)',
+    1: 'استهلاك الكهرباء الشهري (كيلو واط/ساعة)',
+    2: 'استهلاك الكهرباء الأسبوعي (كيلو واط/ساعة)',
+    3: 'استهلاك الكهرباء اليومي (كيلو واط/ساعة)',
+    4: 'استهلاك الكهرباء المباشر (كيلو واط/ساعة)'
   };
 
   // Displays a chart header based on the choice chosen from the selector bar
@@ -59,12 +59,12 @@ export default function HomeScreen() {
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>التكلفة</Text>
               <Text style={styles.largeInfo}>٦٤</Text>
-              <Text style={styles.infoText}>ر.س</Text>
+              <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>اليوم</Text>
               <Text style={styles.largeInfo}>٦٤</Text>
-              <Text style={styles.infoText}>ك.و.س</Text>
+              <Text style={styles.infoText}>كيلو واط / ساعة</Text>
             </View>
           </View>
         </View>
@@ -138,15 +138,15 @@ infoBox: {
 },
 infoText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
 },
 largeInfo: {
-    fontSize: 40,
+    fontSize: 36,
     textAlign: 'center',
 }, 
 chartHeaderText: {
-  fontSize: 18,
+  fontSize: 16,
   textAlign: 'center',
   marginBottom: 10,
   marginTop: 0,
