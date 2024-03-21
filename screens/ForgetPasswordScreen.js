@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "right",
   },
-  bottomContainer: {
+  /*bottomContainer: {
     height: "20%",
     width: "100%",
     position: "absolute",
     bottom: 0,
     paddingHorizontal: 20,
-  },
+  },*/
   button: {
     backgroundColor: themeColors.lightb,
     padding: 13,
