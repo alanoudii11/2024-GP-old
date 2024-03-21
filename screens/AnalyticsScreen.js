@@ -21,22 +21,22 @@ export default function AnalyticsScreen() {
   const [selectedPeriodIndex, setSelectedPeriodIndex] = useState(6); // For the time selector
   const [selectedUnitIndex, setSelectedUnitIndex] = useState(3); // For the metric selector
   const [unitValue, setUnitValue] = useState(73);
-  const periodOptions = ["سنة","شهر","أسبوع","يوم","ساعة","دقيقة","مباشر",];
+  const periodOptions = ["شهر","أسبوع","يوم","ساعة","دقيقة","مباشر",];
   
   const displayPeriodTextMapping = {
-    0: "استهلاك الكهرباء السنوي (ك.و.س)",
-    1: "استهلاك الكهرباء الشهري (ك.و.س)",
-    2: "استهلاك الكهرباء الأسبوعي (ك.و.س)",
-    3: "استهلاك الكهرباء اليومي (ك.و.س)",
-    4: "استهلاك الكهرباء بالساعة (ك.و.س)",
-    5: "استهلاك الكهرباء بالدقيقة (ك.و.س)",
-    6: "استهلاك الكهرباء المباشر (ك.و.س)",
+    // Should remove Monthly as the UI and remove the live as well. it's an Analytics screen not a real dashboard.
+    0: "استهلاك الكهرباء الشهري (كيلو واط/ساعة)",
+    1: "استهلاك الكهرباء الأسبوعي (كيلو واط/ساعة)",
+    2: "استهلاك الكهرباء اليومي (كيلو واط/ساعة)",
+    3: "استهلاك الكهرباء بالساعة (كيلو واط/ساعة)",
+    4: "استهلاك الكهرباء بالدقيقة (كيلو واط/ساعة)",
+    5: "استهلاك الكهرباء المباشر (كيلو واط/ساعة)",
   };
 
   // Displays a chart header based on the choice chosen from the selector bar
   const getPeriodDisplayText = (index) => displayPeriodTextMapping[index];
 
-  const unitOptions = ["فولت", "أمبير", "واط", "ك.و.س"]; // Adjusted metric options
+  const unitOptions = ["فولت", "أمبير", "واط", "كيلو واط/ساعة"]; // Adjusted metric options
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -92,7 +92,8 @@ export default function AnalyticsScreen() {
     // console.log(prevOption== "ك.و.س");
     switch (unitOptions[unitIndex]) {
       case "كربون":
-        return prevOption == "ك.و.س"
+  const unitOptions = ["فولت", "أمبير", "واط", "كيلو واط/ساعة"]; // Adjusted metric options
+        return prevOption == "كيلو واط/ساعة"
           ? convertKwhToCarbon(baseValue, 0.5)
           : prevOption == "أمبير"
           ? convertAmpToCarbon(baseValue, 220, 0.8, 2, 0.5)
@@ -100,18 +101,18 @@ export default function AnalyticsScreen() {
           ? convertVoltToCarbon(baseValue, 10, 0.8, 1, 0.5)
           : baseValue; // Example calculation for carbon
       case "فولت":
-        return prevOption == "ك.و.س"
+        return prevOption == "كيلو واط/ساعة"
           ? convertKwhToVoltage(baseValue, 20, 0.8)
           : prevOption == "أمبير"
           ? convertAmpToVoltage(baseValue, 5)
           : baseValue; // Example calculation for voltage
       case "أمبير":
-        return prevOption == "ك.و.س"
+        return prevOption == "كيلو واط/ساعة"
           ? convertKwhToAmpere(baseValue, 220, 0.8)
           : prevOption == "فولت"
           ? convertVoltToAmpere(baseValue, 5)
           : baseValue; // Example calculation for ampere
-      case "ك.و.س":
+      case "كيلو واط/ساعة":
         return prevOption == "أمبير"
           ? convertAmpToKwh(baseValue, 220, 0.8)
           : prevOption == "كربون"
@@ -150,7 +151,7 @@ export default function AnalyticsScreen() {
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>التكلفة</Text>
               <Text style={styles.largeInfo}>٦٤</Text>
-              <Text style={styles.infoText}>ر.س</Text>
+              <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>اليوم</Text>
@@ -163,7 +164,7 @@ export default function AnalyticsScreen() {
         </View>
         <View style={styles.chartContainer}>
           <Text style={styles.chartHeaderText}></Text>
-          {selectedPeriodIndex === 6 && (
+          {selectedPeriodIndex === 5 && (
             <RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />
           )}
         </View>
@@ -204,12 +205,12 @@ const styles = StyleSheet.create({
   },
   infoText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 16,
     textAlign: "center",
   },
   largeInfo: {
     color: "#fff",
-    fontSize: 40,
+    fontSize: 36,
     textAlign: "center",
   },
   chartContainer: {
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   chartHeaderText: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
     marginBottom: 10,
     marginTop: 0,
