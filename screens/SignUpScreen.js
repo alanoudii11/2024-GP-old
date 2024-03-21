@@ -10,7 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { doc, setDoc,collection, addDoc,query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { KeyboardAvoidingView } from 'react-native';
-
+import { Picker } from '@react-native-picker/picker';
+import CityDropdown from '../components/CityDropdown';
+import * as Icons from 'react-native-heroicons/outline';
 
 export default function SignUpScreen() {
     const navigation = useNavigation();
@@ -35,7 +37,13 @@ export default function SignUpScreen() {
     const [city, setCity] = useState('');
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
-
+    const [passwordChecklist, setPasswordChecklist] = useState({
+        hasUppercase: false,
+        hasLowercase: false,
+        hasNumber: false,
+        hasSpecialChar: false,
+        isLengthValid: false,
+    }); 
 
 
     const handleSubmit = async () => {
@@ -52,13 +60,26 @@ export default function SignUpScreen() {
                 Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
                 return;
             }
+
+            const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+            Alert.alert('كلمة المرور غير صالحة', 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف.');
+            return;
+            }
     
             // Validate phone number format
             if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
                 Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
                 return;
             }
-    
+
+            // Check if the username is in English
+            const englishRegex = /^[a-zA-Z0-9]+$/;
+            if (!englishRegex.test(username)) {
+                Alert.alert('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية فقط');
+                return;
+            }
+
             // Check if the username is available
             const usersRef = collection(db, 'users');
             const querySnapshot = await getDocs(query(usersRef, where('username', '==', username)));
@@ -99,14 +120,55 @@ export default function SignUpScreen() {
             }
         } catch (error) {
             console.error('Error creating user:', error.message);
-            let msg = error.message;
-            if (msg.includes('auth/email-already-in-use')) msg = "البريد الإلكتروني مستخدم بالفعل"
-            if (msg.includes('auth/invalid-email)')) msg = "يرجى استخدام بريد إلكتروني صحيح"
-            Alert.alert('تسجيل', error.message);
-        }
+            let errorMessage = error.message;
+            if (errorMessage.includes('auth/email-already-in-use')) {
+                errorMessage = 'البريد الإلكتروني مستخدم بالفعل';
+            } else if (errorMessage.includes('auth/invalid-email')) {
+                errorMessage = 'يرجى استخدام بريد إلكتروني صحيح';
+            }else if (errorMessage.includes('auth/weak-password')) {
+                errorMessage = 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف';
+            }
+            Alert.alert('تسجيل', errorMessage);
+        }// the password message is dublicated just in case
     };
 
+    const [isCityDropdownVisible, setIsCityDropdownVisible] = useState(false);
+
+    // Function to handle city selection
+    const handleCitySelect = (selectedCity) => {
+        setCity(selectedCity);
+        setIsCityDropdownVisible(false);
+    };
     
+    // Function to toggle city dropdown visibility
+    const toggleCityDropdown = () => {
+        setIsCityDropdownVisible(!isCityDropdownVisible);
+    };
+    
+
+    
+    const saudiArabiaCities = [
+        'الرياض',
+        'جدة',
+        'مكة المكرمة',
+        'المدينة المنورة',
+        'الدمام',
+        'الخبر',
+        'الطائف',
+        'تبوك',
+        'بريدة',
+        'خميس مشيط',
+        'أبها',
+        'الجبيل',
+        'نجران',
+        'الهفوف',
+        'ينبع',
+        'حائل',
+        'القطيف',
+        'الأحساء',
+        'عرعر',
+        'الظهران',
+    ];
     
     
     const toggleDatePicker = () => {
@@ -142,50 +204,35 @@ export default function SignUpScreen() {
         
         return `${day}-${month}-${year}`;
     }
-   /* const handleSubmit = async () => {
-        if (email && password && firstName && lastName && phoneNumber && birthdate && city) {
-            if (phoneNumber.length === 10 && phoneNumber.startsWith('05')) {
-                try {
-                    // Create user with email and password
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    // If user is successfully created, save additional data to Firestore
-                    if (userCredential && userCredential.user) {
-                        await addDoc(collection(db, 'users'), {
-                        uid: user.uid,
-                        firstName,
-                        lastName,
-                        username,
-                        email,
-                        phoneNumber,
-                        birthdate,
-                        city,
-                        });
-                        // Reset form after successful sign up
-                        setUsername('');
-                        setEmail('');
-                        setPassword('');
-                        setFirstName('');
-                        setLastName('');
-                        setPhoneNumber('');
-                        setBirthdate('');
-                        setCity('');
-                        Alert.alert('تسجيل', 'تم إنشاء الحساب بنجاح');
-                    }
-                } catch (err) {
-                    console.log('حدث خطأ: ', err.message);
-                    let msg = err.message;
-                    if (msg.includes('auth/email-already-in-use')) msg = "البريد الإلكتروني مستخدم بالفعل"
-                    if (msg.includes('auth/invalid-email)')) msg = "يرجى استخدام بريد إلكتروني صحيح"
-                    Alert.alert('تسجيل', err.message);
-                }
-            } else {
-                Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
-            }
-        } else {
-            Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
-        }
-    }; */
-    
+    const calculateMinimumDate = () => {
+        const currentDate = new Date();
+        const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
+        return minDate;
+    };
+
+    const handlePasswordChange = (value) => {
+        setPassword(value);
+
+        // Update password checklist
+        const hasUppercase = /[A-Z]/.test(value);
+        const hasLowercase = /[a-z]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        const isLengthValid = value.length >= 8;
+
+        setPasswordChecklist({
+            hasUppercase,
+            hasLowercase,
+            hasNumber,
+            hasSpecialChar,
+            isLengthValid,
+        });
+    };
+
+
+
+
+
 
 
     return (
@@ -213,7 +260,7 @@ export default function SignUpScreen() {
                         style={styles.input}
                         value={username}
                         onChangeText={value => setUsername(value)}
-                        placeholder='ادخل اسم المستخدم'
+                        placeholder='ادخل اسم المستخدم باللغة الإنجليزية'
                     />
                     <Text style={styles.label}>البريد الالكتروني<Text style={styles.required}> *</Text></Text>
                     <TextInput
@@ -222,14 +269,33 @@ export default function SignUpScreen() {
                         onChangeText={value => setEmail(value)}
                         placeholder='ادخل بريدك الالكتروني'
                     />
-                    <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
-                    <TextInput
+                   { /* <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
+                   <TextInput
                         style={styles.input}
                         secureTextEntry
                         value={password}
                         onChangeText={value => setPassword(value)}
                         placeholder='ادخل كلمة المرور'
-                    />
+                    />*/}
+                    <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
+                        <TextInput
+                            style={styles.input}
+                            secureTextEntry
+                            value={password}
+                            onChangeText={handlePasswordChange}
+                            placeholder='ادخل كلمة المرور'
+                        />
+
+                        {/* Password checklist */}
+                        <View style={styles.passwordChecklist}>
+                        <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasUppercase ? 'green' : 'gray'} />} text="يحتوي على حرف كبير" isCompleted={passwordChecklist.hasUppercase} />
+<ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasLowercase ? 'green' : 'gray'} />} text="يحتوي على حرف صغير" isCompleted={passwordChecklist.hasLowercase} />
+<ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasNumber ? 'green' : 'gray'} />} text="يحتوي على رقم" isCompleted={passwordChecklist.hasNumber} />
+<ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasSpecialChar ? 'green' : 'gray'} />} text="يحتوي على رمز خاص" isCompleted={passwordChecklist.hasSpecialChar} />
+<ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.isLengthValid ? 'green' : 'gray'} />} text="طوله 8 أحرف على الأقل" isCompleted={passwordChecklist.isLengthValid} />
+
+
+                        </View>
                     <Text style={styles.label}>رقم الجوال<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
@@ -244,8 +310,8 @@ export default function SignUpScreen() {
                             display='spinner'
                             value={date}
                             onChange={onChange}
-                            maximumDate={new Date('2009-1-1')}
                             minimumDate={new Date('1940-1-1')}
+                            maximumDate={calculateMinimumDate()}
                             style={styles.datePicker}
                         />
                     )}
@@ -277,13 +343,18 @@ export default function SignUpScreen() {
                     )}
 
  
-                    <Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
-                    <TextInput
-                        style={styles.input}
-                        value={city}
-                        onChangeText={value => setCity(value)}
-                        placeholder='ادخل اسم المدينة'
+
+                      <Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
+                      <TouchableOpacity style={styles.input} onPress={toggleCityDropdown}>
+                      <Text style={[{ textAlign: 'right' }, {color: city ? 'black' : '#aaa' }]}>{city || 'اختر المدينة'}</Text>
+                      </TouchableOpacity>
+                      <CityDropdown
+                        visible={isCityDropdownVisible}
+                        cities={saudiArabiaCities}
+                        onSelect={handleCitySelect}
+                        onClose={toggleCityDropdown}
                     />
+                    
                     <TouchableOpacity
                         style={styles.button}
                         onPress={handleSubmit}
@@ -302,6 +373,13 @@ export default function SignUpScreen() {
         </View></KeyboardAvoidingView>
     );
 }
+const ChecklistItem = ({ icon, text, isCompleted }) => (
+    <View style={[styles.checklistItem, { flexDirection: 'row-reverse' }]}>
+        {icon}
+        <Text style={[styles.checklistText, { color: isCompleted ? 'green' : 'gray' }]}>{text}</Text>
+    </View>
+);
+
 
 const styles = StyleSheet.create({
     container: {
@@ -339,6 +417,11 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         marginTop:10,
     },
+    passwordChecklist: {
+        marginTop: 10,
+    },
+    checklistItem: {
+        flexDirection: 'row'},
     button: {
         padding: 15,
         backgroundColor: themeColors.lightb,
