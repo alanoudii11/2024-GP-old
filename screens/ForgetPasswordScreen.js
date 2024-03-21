@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
+  Pressable,
 } from "react-native";
+import { Alert } from "react-native";
 import { themeColors } from "../theme";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
@@ -18,17 +19,16 @@ const ForgetPasswordScreen = () => {
   const [isPasswordReset, setIsPasswordReset] = useState(false);
   const navigation = useNavigation();
 
-  const handleSubmit = async () => {
+  const resetPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
       setIsPasswordReset(true);
       // Display success message as an alert
       Alert.alert(
-        "تم إرسال رابط إعادة تعيين كلمة المرور لبريدك الإلكتروني بنجاح.",
-        [{ text: "OK", onPress: () => {} }]
+        "تم إرسال رابط إعادة تعيين كلمة المرور لبريدك الإلكتروني بنجاح."
       );
     } catch (error) {
-      console.error("حدث خطأ أثناء إرسال رابط إعادة تعيين كلمة المرور لبريدك الإلكتروني:", error);
+      console.error("حدث خطأ، حاول مرة أخرى", error);
       // Handle error if necessary
     }
   };
@@ -52,18 +52,9 @@ const ForgetPasswordScreen = () => {
         <TouchableOpacity
           style={styles.button}
           disabled={!email}
-          onPress={handleSubmit}
+          onPress={resetPassword}
         >
-          {!isPasswordReset && (
-  <TouchableOpacity
-    style={styles.button}
-    disabled={!email}
-    onPress={resetPassword}
-  >
-    <Text style={styles.buttonText}>استرجاع</Text>
-  </TouchableOpacity>
-)}
-
+          <Text style={styles.buttonText}>استرجاع</Text>
         </TouchableOpacity>
       </View>
     </View>
