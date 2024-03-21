@@ -22,7 +22,7 @@ import BottomNavBar from '../navigation/BottomNavBar';
 
 
 
-export default function SettingsScreen() {
+export default function SettingsScreen({route}) {
 
   const navigation = useNavigation();
 
@@ -41,23 +41,27 @@ export default function SettingsScreen() {
   useEffect(() => {
     // Fetch user data from Firestore
     const fetchUserData = async () => {
+      // Check if the updated first name is passed through navigation params
+      if (route.params && route.params.updatedFirstName) {
+        setFirstName(route.params.updatedFirstName);
+      } else {
+        // Fetch user data from Firestore
         try {
-            const usersRef = collection(db, 'users');
-            const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
+          const usersRef = collection(db, 'users');
+          const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
 
-            if (!querySnapshot.empty) {
-                // Assuming there's only one document for each user
-                const userData = querySnapshot.docs[0].data();
-                setFirstName(userData.firstName);
-            }
+          if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            setFirstName(userData.firstName);
+          }
         } catch (error) {
-            console.error('Error fetching user data:', error);
+          console.error('Error fetching user data:', error);
         }
+      }
     };
 
     fetchUserData();
-}, []);
-
+  }, [route.params]); // Listen for changes in route params
 
 
   return (
