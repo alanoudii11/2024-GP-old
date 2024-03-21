@@ -52,7 +52,14 @@ export default function SignUpScreen() {
                 Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
                 return;
             }
-    
+
+            // Check password criteria
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+            Alert.alert('كلمة المرور غير صالحة', 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف.');
+            return;
+            }
+            
             // Validate phone number format
             if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
                 Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
