@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList,ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import { StyleSheet } from "react-native";
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,17 +9,51 @@ import * as Icons from 'react-native-heroicons/outline';
 
 export default function AlertsScreen() {
   const [alertsData, setAlertsData] = useState([
-    { id: '1', title: 'تم اكتشاف استخدام غير معتاد للبطارية. يرجى التحقق من التطبيقات التي قد تكون تستهلك البطارية بشكل غير متوقع'},
-    { id: '2', title: ' تحذير من درجات الحرارة المنخفضة. يُرجى الانتباه إلى درجات الحرارة المنخفضة المتوقعة واتخاذ التدابير الوقائية اللازمة.'},
-    { id: '3', title: 'تنبيه 3' },
+    { id: '1', title: 'تم اكتشاف استخدام غير معتاد للبطارية. يرجى التحقق من التطبيقات التي قد تكون تستهلك البطارية بشكل غير متوقع', date: getRandomDate(), time: getRandomTime() },
+    { id: '2', title: ' تحذير من درجات الحرارة المنخفضة. يُرجى الانتباه إلى درجات الحرارة المنخفضة المتوقعة واتخاذ التدابير الوقائية اللازمة.', date: getRandomDate(), time: getRandomTime() },
+    { id: '3', title: 'اتصل بفني كهربائي متخصص لإصلاح أي مشاكل كهربائية في منزلك.', date: getRandomDate(), time: getRandomTime() },
   ]);
 
   const navigation = useNavigation();
 
   const handleReject = (itemId) => {
-  
     setAlertsData(alertsData.filter(item => item.id !== itemId));
   };
+
+  /*
+  ############## Today's Date and time for each Alert message ##############
+
+
+  const renderItem = ({ item }) => (
+  <View style={styles.alertItem}>
+    <View style={styles.contentContainer}>
+      <Text style={styles.alertTitle}>{item.title}</Text>
+      <Icons.ExclamationCircleIcon size={24} style={styles.icon} />
+    </View>
+    <View style={styles.dateTimeContainer}>
+      <Text style={styles.dateTimeText}>Date: {getCurrentDate()}</Text>
+      <Text style={styles.dateTimeText}>Time: {getCurrentTime()}</Text>
+    </View>
+    <View style={styles.buttonContainer}>
+    </View>
+  </View>
+);
+
+const getCurrentDate = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+};
+
+const getCurrentTime = () => {
+  const date = new Date();
+  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+};
+
+  */
+
+
+
+// Generate random date and time and frizz it.
 
   const renderItem = ({ item }) => (
     <View style={styles.alertItem}>
@@ -27,16 +61,30 @@ export default function AlertsScreen() {
         <Text style={styles.alertTitle}>{item.title}</Text>
         <Icons.ExclamationCircleIcon size={24} style={styles.icon} />
       </View>
+      <View style={styles.dateTimeContainer}>
+        <Text style={styles.dateTimeText}>Date: {item.date}</Text>
+        <Text style={styles.dateTimeText}>Time: {item.time}</Text>
+      </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.rejectButton} onPress={() => handleReject(item.id)}>
-          <Text style={styles.rejectButtonText}>رفض</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.acceptButton}>
-          <Text style={styles.acceptButtonText}>قبول</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
+
+  function getRandomDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+  
+  function getRandomTime() {
+    const date = new Date();
+    const hour = ('0' + date.getHours()).slice(-2);
+    const minute = ('0' + date.getMinutes()).slice(-2);
+    const second = ('0' + date.getSeconds()).slice(-2);
+    return `${hour}:${minute}:${second}`;
+  }
 
   return (
     <View style={styles.container}>
@@ -44,15 +92,17 @@ export default function AlertsScreen() {
       
       <View style={styles.sugg}>
         <Text style={styles.descriptionText}>التنبيهات:</Text>
-      </View><ScrollView contentContainerStyle={styles.scrollContent}>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={alertsData}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-        />
-      </SafeAreaView></ScrollView>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <SafeAreaView style={styles.container}>
+          <FlatList
+            data={alertsData}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </SafeAreaView>
+      </ScrollView>
     </View>
   );
 }
@@ -71,7 +121,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 20, 
   },
-   descriptionText: {
+  descriptionText: {
     fontSize: 20,
     color: 'white', 
     textAlign: 'right',
@@ -101,32 +151,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'right',
-    //padding: 7,
     marginLeft: 20,
   },
-  buttonContainer: {
+  dateTimeContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 15, 
-    
+    justifyContent: 'space-between',
   },
-  rejectButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    backgroundColor: themeColors.lightb,
-    marginRight: 25,
-  },
-  rejectButtonText: {
-    color: themeColors.textLight,
-  },
-  acceptButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    backgroundColor: themeColors.lightb,
-  },
-  acceptButtonText: {
-    color: themeColors.textLight,
+  dateTimeText: {
+    fontSize: 14,
+    color: 'gray',
+    textAlign: 'right',
+    marginTop: 5,
+    marginRight: 20,
   },
 });
