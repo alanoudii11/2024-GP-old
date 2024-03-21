@@ -3,28 +3,16 @@ import React from 'react';
   import { SafeAreaView } from 'react-native-safe-area-context';
   import * as Icons from 'react-native-heroicons/solid';
   import { useNavigation } from '@react-navigation/native';
-  
+  import TopNavBar2 from '../navigation/TopNavBar2';
   import { themeColors } from '../theme';
   
-  export default function ConnectScreen() {
+  export default function ConnectSteps() {
     const navigation = useNavigation();
     
     return (
       <SafeAreaView style={styles.container}>
-        <SafeAreaView style={styles.containerHeader}>
-          <View style={styles.navBar}>
-            
-            <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen')} style={styles.goBackContainer}>
-            <Icons.ArrowRightIcon size="30" color="white" style={styles.iconStyle} />
-            </TouchableOpacity>
-            
-            <View style={styles.logoContainer}>
-              <Image source={require('../assets/images/logobetter.png')} style={styles.logo} />
-            </View>
+      <TopNavBar2/>
   
-          </View>
-        </SafeAreaView>
-        
         <View style={styles.container}>
           <View style={styles.formContainer}>
           <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -61,8 +49,8 @@ import React from 'react';
             </ScrollView>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Device')}>
-              <Icons.PlusCircleIcon size={30} color="gray" style={{ marginRight:15 }} />
+              onPress={() => navigation.navigate('Home')}>
+              {/*<Icons.PlusCircleIcon size={30} color="black" style={{ marginRight:15 }} />*/}
               <Text style={styles.buttonText}>ربط الجهاز</Text>
             </TouchableOpacity>
           </View>
@@ -112,7 +100,7 @@ import React from 'react';
       fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
-      color: 'gray',
+      color: 'black',
     },
     containerHeader: {
       width: '100%',

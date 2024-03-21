@@ -14,6 +14,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
 import logo from "../assets/images/logobetter.png";
 import { useNavigation } from "@react-navigation/native";
+import TopNavBar2 from "../navigation/TopNavBar2";
 const ForgetPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [isPasswordReset, setIsPasswordReset] = useState(false);
@@ -27,23 +28,26 @@ const ForgetPasswordScreen = () => {
     }
   };
   return (
-    <SafeAreaView style={styles.safeArea}>
+    
+    <View className="flex-1"
+    style={{ backgroundColor: themeColors.bg }} 
+  >
+    <TopNavBar2 />
+
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Image style={styles.logo} source={logo} />
-          <Text style={styles.logoText}>مرشد</Text>
-        </View>
+        
+      <Text style={styles.title}>استرجاع كلمة المرور</Text>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputTitle}>كلمة المرور</Text>
-          <TextInput
+        <Text style={styles.label}>ادخل بريدك الالكتروني </Text>
+        <TextInput
             style={styles.input}
             placeholder="البريد الالكتروني"
             placeholderTextColor="#fff"
             keyboardType="email-address"
             value={email}
             onChangeText={(e) => setEmail(e)}
-          />
+        />
         </View>
         {isPasswordReset && (
           <View style={styles.passwordResetContainer}>
@@ -78,7 +82,7 @@ const ForgetPasswordScreen = () => {
           </View>
         )}
       </View>
-    </SafeAreaView>
+</View>
   );
 };
 const styles = StyleSheet.create({
@@ -96,32 +100,26 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     marginTop: 20,
   },
-  logo: {
-    objectFit: "contain",
-    height: 70,
-    width: 70,
-  },
-  logoText: {
-    color: themeColors.lightb,
-    fontSize: 25,
-    fontWeight: "400",
-  },
+  
   inputContainer: {
     height: "28%",
     justifyContent: "center",
   },
-  inputTitle: {
-    fontSize: 22,
-    color: "#fff",
+  title: {
+    fontSize: 16,
+    color: 'white',
     fontWeight: "300",
     textAlign: "center",
+    marginTop: 100,
+
   },
   input: {
     backgroundColor: "rgba(238,238,238,0.2)",
     borderRadius: 8,
     padding: 12,
-    marginTop: 50,
+    marginTop: 10,
     color: "#fff",
+    textAlign: 'right',
   },
   bottomContainer: {
     height: "20%",
@@ -150,20 +148,26 @@ const styles = StyleSheet.create({
   linkText: {
     textDecorationLine: "underline",
     color: themeColors.lightb,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "400",
   },
   text: {
     color: "#fff",
-    fontSize: 17,
+    fontSize: 16,
   },
   sentLinkText: {
     color: "#16a016",
     textAlign: "center",
-    fontSize: 21,
+    fontSize: 16,
   },
   passwordResetContainer: {
     paddingVertical: 10,
   },
+  label: {
+    color: 'white',
+    textAlign: 'right',
+    marginTop:16,
+    
+},
 });
 export default ForgetPasswordScreen;
