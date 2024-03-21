@@ -15,6 +15,9 @@ import EditProfileScreen from '../screens/EditProfileScreen';
 import ConnectScreen from '../screens/ConnectScreen';
 import ConnectSteps from '../screens/ConnectSteps';
 import ForgetPasswordScreen from '../screens/ForgetPasswordScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import DeviceConnectionScreen from '../screens/DeviceConnectionScreen';
+import ContactUsScreen from '../screens/ContactUsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +40,9 @@ export default function AppNavigation() {
           <Stack.Screen name="EditProfile" options={{headerShown: false}} component={EditProfileScreen} />
           <Stack.Screen name="ConnectScreen" options={{headerShown: false}} component={ConnectScreen} />
           <Stack.Screen name="ConnectSteps" options={{headerShown: false}} component={ConnectSteps} />
+          <Stack.Screen name="ChangePassword" options={{headerShown: false}} component={ChangePasswordScreen}/>
+          <Stack.Screen name="DeviceConnection" options={{headerShown: false}} component={DeviceConnectionScreen}/>
+          <Stack.Screen name="ContactUs" options={{headerShown: false}} component={ContactUsScreen}/>
 
         </Stack.Navigator>
       </NavigationContainer>
