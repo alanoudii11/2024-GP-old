@@ -52,14 +52,7 @@ export default function SignUpScreen() {
                 Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
                 return;
             }
-
-            // Check password criteria
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!passwordRegex.test(password)) {
-            Alert.alert('كلمة المرور غير صالحة', 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف.');
-            return;
-            }
-            
+    
             // Validate phone number format
             if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
                 Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
@@ -102,6 +95,7 @@ export default function SignUpScreen() {
                 setBirthdate('');
                 setCity('');
                 Alert.alert('تسجيل', 'تم إنشاء الحساب بنجاح');
+                navigation.navigate('ConnectScreen');
             }
         } catch (error) {
             console.error('Error creating user:', error.message);
@@ -200,35 +194,35 @@ export default function SignUpScreen() {
             <TopNavBar2 />
             <ScrollView style={styles.scrollView}>
                 <View style={styles.formContainer }>
-                    <Text style={styles.label}>الاسم الأول</Text>
+                    <Text style={styles.label}>الاسم الأول<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={firstName}
                         onChangeText={value => setFirstName(value)}
                         placeholder='ادخل الاسم الأول'
                     />
-                    <Text style={styles.label}>الاسم الأخير</Text>
+                    <Text style={styles.label}>الاسم الأخير<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={lastName}
                         onChangeText={value => setLastName(value)}
                         placeholder='ادخل الاسم الأخير'
                     />
-                    <Text style={styles.label}>اسم المستخدم</Text>
+                    <Text style={styles.label}>اسم المستخدم<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={username}
                         onChangeText={value => setUsername(value)}
                         placeholder='ادخل اسم المستخدم'
                     />
-                    <Text style={styles.label}>البريد الالكتروني</Text>
+                    <Text style={styles.label}>البريد الالكتروني<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={email}
                         onChangeText={value => setEmail(value)}
                         placeholder='ادخل بريدك الالكتروني'
                     />
-                    <Text style={styles.label}>كلمة المرور</Text>
+                    <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         secureTextEntry
@@ -236,14 +230,14 @@ export default function SignUpScreen() {
                         onChangeText={value => setPassword(value)}
                         placeholder='ادخل كلمة المرور'
                     />
-                    <Text style={styles.label}>رقم الجوال</Text>
+                    <Text style={styles.label}>رقم الجوال<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={phoneNumber}
                         onChangeText={value => setPhoneNumber(value)}
                         placeholder='05XXXXXXXX'
                     />
-                    <Text style={styles.label}>تاريخ الميلاد</Text>
+                    <Text style={styles.label}>تاريخ الميلاد<Text style={styles.required}> *</Text></Text>
                     {showPicker && (
                         <DateTimePicker
                             mode='date'
@@ -283,7 +277,7 @@ export default function SignUpScreen() {
                     )}
 
  
-                    <Text style={styles.label}>المدينة</Text>
+                    <Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
                     <TextInput
                         style={styles.input}
                         value={city}
@@ -378,4 +372,9 @@ const styles = StyleSheet.create({
     pickerButton:{
         paddingHorizontal:20,
     },
+    required: {
+        color: 'red',
+        fontSize: 16,
+        marginLeft: 5,
+      },
 });

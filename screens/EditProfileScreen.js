@@ -184,50 +184,56 @@ return (
   </View>
 
   <View style={styles.infocontainer}>
-      <Text style={styles.label}>الاسم الأول</Text>
-      <TextInput
+<Text style={styles.label}>الاسم الأول<Text style={styles.required}> *</Text></Text>
+          <TextInput
         style={styles.input}
         placeholder={userData.firstName}
+        placeholderTextColor='grey' 
         onChangeText={value => {
           console.log('Previous userData:', userData);
           setUserData(prevState => ({ ...prevState, firstName: value }));
           console.log('Updated userData:', userData);
         }}
       />
-      <Text style={styles.label}>الاسم الأخير</Text>
+      <Text style={styles.label}>الاسم الأخير<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.lastName}
+        placeholderTextColor='grey' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, lastName: value }))}
       />
-      <Text style={styles.label}>اسم المستخدم</Text>
+      <Text style={styles.label}>اسم المستخدم<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.username}
+        placeholderTextColor='grey' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, username: value }))}
       />
-      <Text style={styles.label}>البريد الالكتروني</Text>
+      <Text style={styles.label}>البريد الالكتروني<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.email}
+        placeholderTextColor='grey' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, email: value }))}
       />
 
-<Text style={styles.label}>رقم الجوال </Text>
+<Text style={styles.label}>رقم الجوال<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.phoneNumber}
+        placeholderTextColor='grey' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, phoneNumber: value }))}
       />
 
-<Text style={styles.label}>المدينة  </Text>
+<Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.city}
+        placeholderTextColor='grey'
         onChangeText={value => setUserData(prevState => ({ ...prevState, city: value }))}
       />
 
-<Text style={styles.label}>تاريخ الميلاد  </Text>
+<Text style={styles.label}>تاريخ الميلاد<Text style={styles.required}> *</Text></Text>
 {showPicker && (
     <DateTimePicker
         mode='date'
@@ -257,6 +263,7 @@ return (
             style={styles.input}
             value={birthdate}
             placeholder={userData.birthdate} // Placeholder set to userData.birthdate
+            placeholderTextColor='grey' 
             editable={false}
             onPressIn={toggleDatePicker}
         />
@@ -317,12 +324,15 @@ const styles = StyleSheet.create({
   input: {
     //hight 40ishh
     paddingVertical: 12,
-    color: '#555',
-    backgroundColor: '#D3D9D9',
+    color: 'black',//new info color
+    backgroundColor: 'white',
     borderRadius: 8,
     marginBottom: 10,
     textAlign: 'right',
     paddingHorizontal: 20,
+    borderWidth: 1, // Add border width
+    borderColor: '#143638', // Add border color
+    
   },
   /*button: {
     backgroundColor: 'blue',
@@ -349,6 +359,11 @@ button: {
   backgroundColor: themeColors.lightb,
   borderRadius: 20,
   marginTop: 25,
+},
+required: {
+  color: 'red',
+  fontSize: 16,
+  marginLeft: 5,
 },
 
 });
