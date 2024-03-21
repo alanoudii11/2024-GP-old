@@ -149,14 +149,14 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.safeAreaView}>
       
         <View style={styles.content}>
-          <Text style={styles.emailLabel}>البريد الالكتروني</Text>
+          <Text style={styles.emailLabel}>البريد الالكتروني<Text style={styles.required}> *</Text></Text>
           <TextInput
             style={styles.emailInput}
             placeholder="البريد الالكتروني"
             value={email}
             onChangeText={value => setEmail(value)}
           />
-          <Text style={styles.passwordLabel}>كلمة المرور</Text>
+          <Text style={styles.passwordLabel}>كلمة المرور<Text style={styles.required}> *</Text></Text>
           <TextInput
             style={styles.passwordInput}
             secureTextEntry
@@ -305,5 +305,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
 
   },
+  required: {
+    color: 'red',
+    fontSize: 16,
+    marginLeft: 5,
+  },
+  
 });
 
