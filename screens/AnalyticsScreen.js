@@ -182,6 +182,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     fontSize: 20,
     marginBottom: 10,
+    paddingHorizontal: 20,
+
   },
   dataContainer: {
     paddingBottom: 0,
