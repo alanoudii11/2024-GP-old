@@ -13,7 +13,7 @@ import { db } from '../config/firebase';
 import { useEffect, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import CityDropdown from '../components/CityDropdown';
 
 export default function EditProfileScreen() {
     const navigation = useNavigation();
@@ -59,6 +59,50 @@ export default function EditProfileScreen() {
 
   }, []);
   
+
+  const [isCityDropdownVisible, setIsCityDropdownVisible] = useState(false);
+  const [city, setCity] = useState('');
+  
+
+    // Function to handle city selection
+    const handleCitySelect = (selectedCity) => {
+      setUserData((prevState) => ({
+        ...prevState,
+        city: selectedCity,
+    }));
+    setIsCityDropdownVisible(false);
+    };
+    
+    // Function to toggle city dropdown visibility
+    const toggleCityDropdown = () => {
+        setIsCityDropdownVisible(!isCityDropdownVisible);
+    };
+    
+
+    
+    const saudiArabiaCities = [
+        'الرياض',
+        'جدة',
+        'مكة المكرمة',
+        'المدينة المنورة',
+        'الدمام',
+        'الخبر',
+        'الطائف',
+        'تبوك',
+        'بريدة',
+        'خميس مشيط',
+        'أبها',
+        'الجبيل',
+        'نجران',
+        'الهفوف',
+        'ينبع',
+        'حائل',
+        'القطيف',
+        'الأحساء',
+        'عرعر',
+        'الظهران',
+    ];
+
   const [birthdate, setBirthdate] = useState('');
 
     const [showPicker, setShowPicker] = useState(false);
@@ -128,6 +172,25 @@ export default function EditProfileScreen() {
         Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
         return;
       }
+
+      // If the username is changed, perform validation
+      if (userData.username !== username) {
+        // Check if the username is in English
+        const englishRegex = /^[a-zA-Z0-9]+$/;
+        if (!englishRegex.test(username)) {
+            Alert.alert('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية فقط');
+            return;
+        }
+
+        // Check if the username is available
+        const usersQuerySnapshot = await getDocs(query(collection(db, 'users'), where('username', '==', username)));
+
+        if (!usersQuerySnapshot.empty) {
+            // Username already exists
+            Alert.alert('اسم المستخدم مستخدم بالفعل', 'يرجى اختيار اسم مستخدم آخر.');
+            return;
+        }
+    }
       
 
       
@@ -226,12 +289,15 @@ return (
       />
 
 <Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
-      <TextInput
-        style={styles.input}
-        placeholder={userData.city}
-        placeholderTextColor='grey'
-        onChangeText={value => setUserData(prevState => ({ ...prevState, city: value }))}
-      />
+       <TouchableOpacity style={styles.input} onPress={toggleCityDropdown}>
+                      <Text style={[{ textAlign: 'right' }, {color: city ? 'black' : 'grey' }]}>{userData.city}</Text>
+                      </TouchableOpacity>
+                      <CityDropdown
+                        visible={isCityDropdownVisible}
+                        cities={saudiArabiaCities}
+                        onSelect={handleCitySelect}
+                        onClose={toggleCityDropdown}
+                    />
 
 <Text style={styles.label}>تاريخ الميلاد<Text style={styles.required}> *</Text></Text>
 {showPicker && (
@@ -367,6 +433,3 @@ required: {
 },
 
 });
-
-
-
