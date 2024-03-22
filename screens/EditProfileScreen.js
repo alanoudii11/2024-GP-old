@@ -243,7 +243,7 @@ return (
     
   <View style={styles.greetingContainer}>
       <Text style={styles.greetingText}>ملفي الشخصي</Text>
-      <Text style={styles.descriptionText}> بيانات الملف الشخصي</Text>
+      <Text style={styles.descriptionText}> تحديث بيانات الملف الشخصي</Text>
   </View>
 
   <View style={styles.infocontainer}>
@@ -251,7 +251,7 @@ return (
           <TextInput
         style={styles.input}
         placeholder={userData.firstName}
-        placeholderTextColor='grey' 
+        placeholderTextColor='black' 
         onChangeText={value => {
           console.log('Previous userData:', userData);
           setUserData(prevState => ({ ...prevState, firstName: value }));
@@ -262,21 +262,21 @@ return (
       <TextInput
         style={styles.input}
         placeholder={userData.lastName}
-        placeholderTextColor='grey' 
+        placeholderTextColor='black' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, lastName: value }))}
       />
       <Text style={styles.label}>اسم المستخدم<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.username}
-        placeholderTextColor='grey' 
+        placeholderTextColor='black' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, username: value }))}
       />
       <Text style={styles.label}>البريد الالكتروني<Text style={styles.required}> *</Text></Text>
       <TextInput
         style={styles.input}
         placeholder={userData.email}
-        placeholderTextColor='grey' 
+        placeholderTextColor='black' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, email: value }))}
       />
 
@@ -284,20 +284,11 @@ return (
       <TextInput
         style={styles.input}
         placeholder={userData.phoneNumber}
-        placeholderTextColor='grey' 
+        placeholderTextColor='black' 
         onChangeText={value => setUserData(prevState => ({ ...prevState, phoneNumber: value }))}
       />
 
-<Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
-       <TouchableOpacity style={styles.input} onPress={toggleCityDropdown}>
-                      <Text style={[{ textAlign: 'right' }, {color: city ? 'black' : 'grey' }]}>{userData.city}</Text>
-                      </TouchableOpacity>
-                      <CityDropdown
-                        visible={isCityDropdownVisible}
-                        cities={saudiArabiaCities}
-                        onSelect={handleCitySelect}
-                        onClose={toggleCityDropdown}
-                    />
+
 
 <Text style={styles.label}>تاريخ الميلاد<Text style={styles.required}> *</Text></Text>
 {showPicker && (
@@ -329,12 +320,23 @@ return (
             style={styles.input}
             value={birthdate}
             placeholder={userData.birthdate} // Placeholder set to userData.birthdate
-            placeholderTextColor='grey' 
+            placeholderTextColor='black' 
             editable={false}
             onPressIn={toggleDatePicker}
         />
     </TouchableOpacity>
 )}
+
+<Text style={styles.label}>المدينة<Text style={styles.required}> *</Text></Text>
+       <TouchableOpacity style={styles.input} onPress={toggleCityDropdown}>
+                      <Text style={[{ textAlign: 'right' }, {color: city ? 'black' : 'black' }]}>{userData.city}</Text>
+                      </TouchableOpacity>
+                      <CityDropdown
+                        visible={isCityDropdownVisible}
+                        cities={saudiArabiaCities}
+                        onSelect={handleCitySelect}
+                        onClose={toggleCityDropdown}
+                    />
 
       <TouchableOpacity onPress={handleUpdateProfile}>
         <Text style={styles.buttonText}>تحديث الملف الشخصي</Text>
