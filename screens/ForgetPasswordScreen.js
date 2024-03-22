@@ -102,8 +102,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    fontSize: 20,
-    color: "#000",
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
   },
   label: {
     color: "white",
@@ -113,3 +114,4 @@ const styles = StyleSheet.create({
 });
 
 export default ForgetPasswordScreen;
+
