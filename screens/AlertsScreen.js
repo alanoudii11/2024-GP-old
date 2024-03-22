@@ -91,7 +91,7 @@ const getCurrentTime = () => {
       <TopNavBar2 />
       
       <View style={styles.sugg}>
-        <Text style={styles.descriptionText}>التنبيهات:</Text>
+        <Text style={styles.descriptionText}>التنبيهات</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <SafeAreaView style={styles.container}>
@@ -115,17 +115,18 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 100, 
+    
   },
   sugg: {
     alignItems: 'flex-end', 
-    padding: 10,
-    marginRight: 20, 
+    marginTop: 20,
+    marginHorizontal: 20,
   },
   descriptionText: {
-    fontSize: 20,
+    fontSize: 16,
     color: 'white', 
     textAlign: 'right',
-    marginRight: 10,
+    //marginRight: 10,
     fontWeight: 'bold',
   },
   alertItem: {
@@ -149,9 +150,9 @@ const styles = StyleSheet.create({
   alertTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '500',
+    //fontWeight: '500',
     textAlign: 'right',
-    marginLeft: 20,
+    //marginLeft: 20,
   },
   dateTimeContainer: {
     flexDirection: 'row',

@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     paddingHorizontal: 20,
     borderWidth: 1, // Add border width
-    borderColor: '#143638', // Add border color
+    borderColor: '#ccc',
     
   },
   /*button: {

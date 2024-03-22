@@ -92,10 +92,11 @@ const styles = StyleSheet.create({
   upperContainer: {
     backgroundColor: '#143638',
     paddingBottom: 15,
+    
   },
   lowerContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    //backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingTop: 25, 
     marginTop: 0,
@@ -109,7 +110,8 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     alignItems: 'center',
-    paddingHorizontal: 90,
+    //paddingHorizontal: 90,
+    width:"100%",
     paddingVertical: 10,
     marginTop: 15,
     marginBottom: 15,

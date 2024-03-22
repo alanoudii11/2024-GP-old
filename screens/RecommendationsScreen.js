@@ -54,12 +54,13 @@ const styles = StyleSheet.create({
     paddingBottom: 100, 
   },
   recommendationsContent: {
-    padding: 20,
+    marginTop: 20,
+    marginHorizontal: 20,
   },
   sugg: {
     alignItems: 'flex-end', 
     paddingTop: 20,
-    marginRight: 20, 
+    marginHorizontal: 20,
   },
   recommendationItem: {
     backgroundColor: themeColors.bg, 
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
   },
   recommendationText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'right',
     padding: 7,
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#143638', 
     textAlign: 'right',
-    marginRight: 10,
+    fontWeight: 'bold',
+
   },
 });

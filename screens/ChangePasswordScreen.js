@@ -17,7 +17,7 @@ const ChangePasswordScreen = () => {
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
-      Alert.alert("خطأ", "كلمة المرور الجديدة وتأكيد كلمة المرور لا تتطابقان");
+      Alert.alert("خطأ", "تأكد من تطابق كلمة المرور");
       return;
     }
 
@@ -31,11 +31,11 @@ const ChangePasswordScreen = () => {
       // Change the password
       await updatePassword(user, newPassword);
 
-      Alert.alert("نجاح", "تم تغيير كلمة المرور بنجاح");
+      Alert.alert("تم بنجاح", "تم تغيير كلمة المرور بنجاح");
       navigation.goBack(); // Navigate back to previous screen
     } catch (error) {
       console.error("خطأ في تغيير كلمة المرور:", error);
-      Alert.alert("خطأ", "فشل تغيير كلمة المرور. يرجى المحاولة مرة أخرى.");
+      Alert.alert("خطأ", "فشل في تغيير كلمة المرور. يرجى المحاولة مرة أخرى.");
     }
   };
 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    marginTop: 50,
+        marginTop:20,
     paddingHorizontal: 20,
 
   },
@@ -107,20 +107,23 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     paddingHorizontal: 20,
     borderWidth: 1, // Add border width
-    borderColor: '#143638', // Add border color
+    borderColor: '#ccc',
   },
-  button: {
+  /*button: {
     backgroundColor: themeColors.lightb,
-    padding: 13,
+    padding: 16,
     borderRadius: 8,
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
-  },
+  },*/
   buttonText: {
+    textAlign: 'center',
     fontSize: 16,
-    color: "black",
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    textDecorationLine: 'underline', // Underline the text,
+    color: '#82C8FF',
+    paddingVertical: 35,
   },
   greetingContainer: {
     alignItems: 'flex-end', // Align to the right

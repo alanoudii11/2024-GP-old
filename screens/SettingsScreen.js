@@ -31,6 +31,18 @@ export default function SettingsScreen({route}) {
     navigation.navigate('EditProfile');
   };
 
+  const handleChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
+
+  /*const handleDeviceConnection = () => {
+    navigation.navigate('DeviceConnection');
+  };*/
+
+  const handleContactUs = () => {
+    navigation.navigate('ContactUs');
+  };
+
   const handleLogout = async ()=>{
     await signOut(auth);
   }
@@ -87,17 +99,12 @@ export default function SettingsScreen({route}) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          /*onPress={handlePressEditProfile}*/ style={[styles.button, { marginTop: 20}]}>
+          onPress={handleChangePassword} style={[styles.button, { marginTop: 20}]}>
           <Text style={styles.buttonText}>تغيير كلمة المرور </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          /*onPress={handlePressEditProfile}*/ style={[styles.button, { marginTop: 20}]}>
-          <Text style={styles.buttonText}> الكشف عن الجهاز </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          /*onPress={handlePressEditProfile}*/ style={[styles.button, { marginTop: 20}]}>
+          onPress={handleContactUs} style={[styles.button, { marginTop: 20}]}>
           <Text style={styles.buttonText}>تواصل معنا  </Text>
         </TouchableOpacity>
 

@@ -126,7 +126,7 @@ export default function AnalyticsScreen() {
     <View style={styles.container}>
       <TopNavBar />
       <ScrollView style={styles.scrollViewStyle}>
-        <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
+        <View style={{ marginTop: 20}}>
           <Text style={styles.rightAlignedLabel}>الفترة</Text>
           <SelectorBar
             options={periodOptions}
@@ -135,7 +135,7 @@ export default function AnalyticsScreen() {
           />
         </View>
 
-        <View style={{ marginTop: 0, paddingHorizontal: 10 }}>
+        <View style={{ marginTop: 0,}}>
           <Text style={styles.rightAlignedLabel}>الوحدة</Text>
           <SelectorBar
             options={unitOptions}
@@ -176,13 +176,15 @@ export default function AnalyticsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff", // Set background color to white
+    //backgroundColor: "#ffffff", no need
   },
   rightAlignedLabel: {
     alignSelf: "flex-end",
-    fontSize: 20,
+    fontSize: 16,
     marginBottom: 10,
     paddingHorizontal: 20,
+    fontWeight: 'bold',
+
 
   },
   dataContainer: {
@@ -195,8 +197,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     paddingVertical: 2,
+    
   },
   infoBox: {
     flex: 1,
@@ -227,4 +230,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 0,
   },
+  scrollViewStyle:{
+    
+  }
 });
