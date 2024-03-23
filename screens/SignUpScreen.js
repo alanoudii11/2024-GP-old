@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { doc, setDoc,collection, addDoc,query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { KeyboardAvoidingView } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+//import { Picker } from '@react-native-picker/picker';
 import CityDropdown from '../components/CityDropdown';
 import * as Icons from 'react-native-heroicons/outline';
 
@@ -61,11 +61,11 @@ export default function SignUpScreen() {
                 return;
             }
 
-            const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+           /* const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
             if (!passwordRegex.test(password)) {
             Alert.alert('كلمة المرور غير صالحة', 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف.');
             return;
-            }
+            }*/
     
             // Validate phone number format
             if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
@@ -212,14 +212,14 @@ export default function SignUpScreen() {
 
     const handlePasswordChange = (value) => {
         setPassword(value);
-
+    
         // Update password checklist
         const hasUppercase = /[A-Z]/.test(value);
         const hasLowercase = /[a-z]/.test(value);
         const hasNumber = /[0-9]/.test(value);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\|\-=]/.test(value);
         const isLengthValid = value.length >= 8;
-
+    
         setPasswordChecklist({
             hasUppercase,
             hasLowercase,
@@ -227,13 +227,20 @@ export default function SignUpScreen() {
             hasSpecialChar,
             isLengthValid,
         });
+    
+        // Log password and checklist for debugging
+        console.log("Password:", value);
+        console.log("Password Checklist:", {
+            hasUppercase,
+            hasLowercase,
+            hasNumber,
+            hasSpecialChar,
+            isLengthValid,
+        });
     };
-
-
-
-
-
-
+    
+    
+    
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : null}>
