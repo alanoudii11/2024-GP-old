@@ -31,7 +31,7 @@ import React from 'react';
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.stepText}>الخطوة الرابعة:</Text>
-              <Text style={styles.stepDescription}>ثبت أجهزة الاستشعار الخاصة بـ Emporia على خطوط الطاقة الرئيسية الواصلة إلى لوحة التوزيع الخاصة بك.</Text>
+              <Text style={styles.stepDescription}>ثبت أجهزة الاستشعار الخاصة بـ مرشد على خطوط الطاقة الرئيسية الواصلة إلى لوحة التوزيع الخاصة بك.</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.stepText}>الخطوة الخامسة:</Text>
