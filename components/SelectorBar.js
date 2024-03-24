@@ -32,7 +32,7 @@ const SelectorBar = ({ options, selectedIndex, onSelect }) => {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         paddingVertical: 2,
-        paddingHorizontal: 10,
+        paddingHorizontal: 35,
         marginTop: 0,
         marginBottom: 30,
         backgroundColor: 'rgba(192, 192, 192, 0.4)',
