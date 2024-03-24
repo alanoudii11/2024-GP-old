@@ -148,6 +148,7 @@ export default function SignUpScreen() {
 
     
     const saudiArabiaCities = [
+        'عنيزة',
         'الرياض',
         'جدة',
         'مكة المكرمة',
