@@ -16,25 +16,21 @@ import W_RealTimeChart from "../charts/W_RealTimeChart";
 import Kwh_DailyChart from "../charts/Kwh_DailyChart";
 import W_DailyChart from "../charts/W_DailyChart";
 import Amp_DailyChart from "../charts/Amp_DailyChart";
-import V_DailyChart from "../charts/V_DailyChart";
 import Kwh_WeeklyChart from "../charts/Kwh_WeeklyChart";
 import W_WeeklyChart from "../charts/W_WeeklyChart";
 import Amp_WeeklyChart from "../charts/Amp_WeeklyChart";
-import V_WeeklyChart from "../charts/V_WeeklyChart";
 import Kwh_MonthlyChart from "../charts/Kwh_MonthlyChart";
 import W_MonthlyChart from "../charts/W_MonthlyChart";
 import Amp_MonthlyChart from "../charts/Amp_MonthlyChart";
-import V_MonthlyChart from "../charts/V_MonthlyChart";
 import Kwh_YearlyChart from "../charts/Kwh_YearlyChart";
 import W_YearlyChart from "../charts/W_YearlyChart";
 import Amp_YearlyChart from "../charts/Amp_YearlyChart";
-import V_YearlyChart from "../charts/V_YearlyChart";
 
 export default function AnalyticsScreen() {
   const [selectedPeriodIndex, setSelectedPeriodIndex] = useState(4); // 'مباشر' as default
-  const [selectedUnitIndex, setSelectedUnitIndex] = useState(3); // 'كيلو واط/ساعة' as default
+  const [selectedUnitIndex, setSelectedUnitIndex] = useState(2); // 'كيلو واط/ساعة' as default
   const periodOptions = ["سنة", "شهر", "أسبوع", "يوم", "مباشر"];
-  const unitOptions = ["فولت", "أمبير", "واط", "كيلو واط/ساعة"];
+  const unitOptions = ["أمبير", "واط", "كيلو واط/ساعة"];
 
   const renderChartComponent = () => {
     let chartComponent = null; // Default to null if no match
@@ -52,9 +48,6 @@ export default function AnalyticsScreen() {
           case "أمبير":
             chartComponent = <Text>غير متاح.</Text>;
             break;
-          case "فولت":
-            chartComponent = <Text>غير متاح.</Text>;
-            break;
         }
         break;
       case "يوم":
@@ -67,9 +60,6 @@ export default function AnalyticsScreen() {
             break;
           case "أمبير":
             chartComponent = <Amp_DailyChart />;
-            break;
-          case "فولت":
-            chartComponent = <V_DailyChart />;
             break;
         }
         break;
@@ -84,9 +74,6 @@ export default function AnalyticsScreen() {
           case "أمبير":
             chartComponent = <Amp_WeeklyChart />;
             break;
-          case "فولت":
-            chartComponent = <V_WeeklyChart />;
-            break;
         }
         break;
       case "شهر":
@@ -100,9 +87,6 @@ export default function AnalyticsScreen() {
           case "أمبير":
             chartComponent = <Amp_MonthlyChart />;
             break;
-          case "فولت":
-            chartComponent = <V_MonthlyChart />;
-            break;
         }
         break;
       case "سنة":
@@ -115,9 +99,6 @@ export default function AnalyticsScreen() {
             break;
           case "أمبير":
             chartComponent = <Amp_YearlyChart />;
-            break;
-          case "فولت":
-            chartComponent = <V_YearlyChart />;
             break;
         }
         break;
@@ -187,13 +168,13 @@ export default function AnalyticsScreen() {
             <View style={styles.infoBox}>
             <Text style={{ textAlign: 'right', color: 'white' }}>
             <Text style={{ fontWeight: 'bold', color: 'white' }}>أعلى</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#82C7FA' }}>الجمعة </Text> 
-            الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>١٥ مارس، ٢٠٢٤</Text>
+            الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>15 مارس، 2024</Text>
             </Text>
             </View>
             <View style={styles.infoBox}>
             <Text style={{ textAlign: 'right', color: 'white' }}>
             <Text style={{ fontWeight: 'bold', color: 'white' }}>أقل</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#82C7FA' }}>الأحد </Text> 
-            الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>٣ مارس، ٢٠٢٤</Text>
+            الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>3 مارس، 2024</Text>
             </Text>
             </View>
           </View>
