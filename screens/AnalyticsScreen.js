@@ -16,6 +16,8 @@ import BottomNavBar from "../navigation/BottomNavBar";
 import RealTimeChart from "../charts/RealTimeChart";
 import SelectorBar from "../components/SelectorBar"; // adjust the path as necessary
 import ProgressBar from "../components/CustomProgressBar";
+import Gauge from "../components/Gauge";
+
 
 export default function AnalyticsScreen() {
   const [selectedPeriodIndex, setSelectedPeriodIndex] = useState(6); // For the time selector
@@ -153,11 +155,7 @@ export default function AnalyticsScreen() {
               <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
-              <Text style={styles.infoText}>اليوم</Text>
-              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.largeInfo}>{unitValue}</Text>
-              <Text style={styles.infoText}>
-                {unitOptions[selectedUnitIndex]}
-              </Text>
+            <Gauge value={25} />
             </View>
           </View>
         </View>
@@ -292,6 +290,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     textAlign: "center",
+  },infoText1:{
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "right",
   },
   largeInfo: {
     color: "#fff",
