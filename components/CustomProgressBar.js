@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     height: '100%',
-    backgroundColor: '#2196F3',
+    backgroundColor: '#69BCFA',
     borderRadius: 10,
   },
   text: {
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
     color: "#143638",
+    fontWeight: 'bold',
   },
 });
 
