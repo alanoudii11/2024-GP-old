@@ -93,7 +93,7 @@ const getCurrentTime = () => {
       <View style={styles.sugg}>
         <Text style={styles.descriptionText}>التنبيهات</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+
         <SafeAreaView style={styles.container}>
           <FlatList
             data={alertsData}
@@ -102,7 +102,7 @@ const getCurrentTime = () => {
             showsVerticalScrollIndicator={false}
           />
         </SafeAreaView>
-      </ScrollView>
+    
     </View>
   );
 }
