@@ -1,5 +1,3 @@
-//---------------AnalyticsScreen.js----------------------
-
 import React, { useState } from "react"; // Correctly import useState along with React
 import {
   View,
@@ -7,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+
 } from "react-native";
 import * as Icons from "react-native-heroicons/solid";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +15,7 @@ import TopNavBar from "../navigation/TopNavBar";
 import BottomNavBar from "../navigation/BottomNavBar";
 import RealTimeChart from "../charts/RealTimeChart";
 import SelectorBar from "../components/SelectorBar"; // adjust the path as necessary
+import ProgressBar from "../components/CustomProgressBar";
 
 export default function AnalyticsScreen() {
   const [selectedPeriodIndex, setSelectedPeriodIndex] = useState(6); // For the time selector
@@ -122,10 +122,77 @@ export default function AnalyticsScreen() {
         return baseValue;
     }
   };
+ 
   return (
     <View style={styles.container}>
       <TopNavBar />
       <ScrollView style={styles.scrollViewStyle}>
+      <Text style={styles.goalText}>تابع تقدمك نحو هدفك!</Text>
+      <View style={styles.goalContainer}>
+          <Text style={styles.goalDescription}>
+           هدفك هو تقليل فاتورتك إلى 900 ريال سعودي, مما يوفر 100 ريال سعودي مقارنة بفاتورة الشهر الماضي التي بلغت 1000 ريال سعودي.
+          </Text>
+          <ProgressBar current={500} target={900} style={{ width: 300 }} />
+
+
+        </View>
+        <View style={styles.dataContainer2}>
+        <View style={styles.ContainerText}>
+        <Text style={styles.conDescription}>
+        نظرة على إستهلاك هذا الشهر:
+          </Text>
+          <Text style={styles.conDescription2}>
+        للفترة: الأحد, 1 مارس حتى الإثنين 25 مارس 2024
+          </Text>
+          </View>
+ <View style={styles.dataContainer}>
+          <View style={styles.infoContainer}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>التكلفة</Text>
+              <Text style={styles.largeInfo}>58</Text>
+              <Text style={styles.infoText}>ريال سعودي</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>اليوم</Text>
+              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.largeInfo}>{unitValue}</Text>
+              <Text style={styles.infoText}>
+                {unitOptions[selectedUnitIndex]}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.dataContainer}>
+          <View style={styles.infoContainer}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>استهلاك الشهر</Text>
+              <Text style={styles.largeInfo}>20</Text>
+              <Text style={styles.infoText}>كيلو واط/ساعة</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>استهلاك اليوم</Text>
+              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.largeInfo}>{unitValue}</Text>
+              <Text style={styles.infoText}>
+                {unitOptions[selectedUnitIndex]}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.dataContainer}>
+          <View style={styles.infoContainer}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>استهلاك الشهر</Text>
+              <Text style={styles.largeInfo}>20</Text>
+              <Text style={styles.infoText}>كيلو واط/ساعة</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoText}>استهلاك اليوم</Text>
+              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.largeInfo}>{unitValue}</Text>
+              <Text style={styles.infoText}>
+                {unitOptions[selectedUnitIndex]}
+              </Text>
+            </View>
+          </View>
+        </View></View>
         <View style={{ marginTop: 20}}>
           <Text style={styles.rightAlignedLabel}>الفترة</Text>
           <SelectorBar
@@ -146,22 +213,7 @@ export default function AnalyticsScreen() {
             }}
           />
         </View>
-        <View style={styles.dataContainer}>
-          <View style={styles.infoContainer}>
-            <View style={styles.infoBox}>
-              <Text style={styles.infoText}>التكلفة</Text>
-              <Text style={styles.largeInfo}>٦٤</Text>
-              <Text style={styles.infoText}>ريال سعودي</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Text style={styles.infoText}>اليوم</Text>
-              <Text adjustsFontSizeToFit numberOfLines={1} style={styles.largeInfo}>{unitValue}</Text>
-              <Text style={styles.infoText}>
-                {unitOptions[selectedUnitIndex]}
-              </Text>
-            </View>
-          </View>
-        </View>
+       
         <View style={styles.chartContainer}>
           <Text style={styles.chartHeaderText}></Text>
           {selectedPeriodIndex === 5 && (
@@ -189,6 +241,34 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     paddingBottom: 0,
+
+  },ContainerText:{
+   
+    marginHorizontal:25,
+  },
+  conDescription:{
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 5,
+    textAlign: 'right',
+    fontWeight: '600',
+    
+  },
+  conDescription2:{
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 10,
+    textAlign: 'right',
+    fontWeight: '400',
+
+  },
+  dataContainer2: {// كله ماله داعي شوي
+    //backgroundColor: 'rgba(192, 192, 192, 0.4)',
+   marginHorizontal: "auto",
+    borderRadius: 20,
+    //padding: 20,
+   marginTop:10,
+   
   },
   safeAreaView: {
     flex: 1,
@@ -232,5 +312,27 @@ const styles = StyleSheet.create({
   },
   scrollViewStyle:{
     
-  }
+  },goalText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#000',
+    marginVertical: 20,
+    textAlign: 'right',
+    marginHorizontal: 20,
+  },
+  goalContainer: {
+    backgroundColor: 'rgba(192, 192, 192, 0.4)',
+    marginHorizontal: 20,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+  },
+  goalDescription: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 20,
+    textAlign: 'right',
+  },
+  
+  
 });
