@@ -13,6 +13,7 @@ import Gauge from "../components/Gauge";
 // Import chart components
 import Kwh_RealTimeChart from "../charts/Kwh_RealTimeChart";
 import W_RealTimeChart from "../charts/W_RealTimeChart";
+import Amp_RealTimeChart from "../charts/Amp_RealTimeChart";
 import Kwh_DailyChart from "../charts/Kwh_DailyChart";
 import W_DailyChart from "../charts/W_DailyChart";
 import Amp_DailyChart from "../charts/Amp_DailyChart";
@@ -43,10 +44,10 @@ export default function AnalyticsScreen() {
             chartComponent = <Kwh_RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />;
             break;
           case "واط":
-            chartComponent = <Text>غير متاح.</Text>;
+            chartComponent = <W_RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />;
             break;
           case "أمبير":
-            chartComponent = <Text>غير متاح.</Text>;
+            chartComponent = <Amp_RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />;
             break;
         }
         break;
@@ -175,15 +176,15 @@ export default function AnalyticsScreen() {
         <View style={styles.dataContainer}>
           <View style={styles.infoContainer}>
             <View style={styles.infoBox}>
-            <Text style={{ textAlign: 'right', color: 'white' }}>
-            <Text style={{ fontWeight: 'bold', color: 'white' }}>أعلى</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#82C7FA' }}>الجمعة </Text> 
+            <Text style={{ textAlign: 'right', color: 'white', fontSize: 16 }}>
+            <Text style={{ fontWeight: 'bold', color: 'white' }}>أعلى</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 21, color: '#82C7FA' }}>الجمعة </Text> 
             الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>15 مارس، 2024</Text>
             </Text>
             </View>
             <View style={styles.infoBox}>
-            <Text style={{ textAlign: 'right', color: 'white' }}>
-            <Text style={{ fontWeight: 'bold', color: 'white' }}>أقل</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#82C7FA' }}>الأحد </Text> 
-            الموافق <Text style={{ color: '#fff', fontSize: 14, fontWeight:'bold'}}>3 مارس، 2024</Text>
+            <Text style={{ textAlign: 'right', color: 'white', fontSize: 16 }}>
+            <Text style={{ fontWeight: 'bold', color: 'white' }}>أقل</Text> استهلاك للكهرباء كان في يوم <Text style={{ fontWeight: 'bold', fontSize: 21, color: '#82C7FA' }}>الأحد </Text> 
+            الموافق <Text style={{ color: '#fff', fontWeight:'bold'}}>3 مارس، 2024</Text>
             </Text>
             </View>
           </View>
