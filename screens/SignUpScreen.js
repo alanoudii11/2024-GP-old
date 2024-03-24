@@ -48,89 +48,104 @@ export default function SignUpScreen() {
 
     const handleSubmit = async () => {
         try {
-            // Check for missing fields
-            if (!email || !password || !firstName || !lastName || !phoneNumber || !birthdate || !city) {
-                Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
-                return;
-            }
-    
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
-                return;
-            }
-
-           /* const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
-            if (!passwordRegex.test(password)) {
-            Alert.alert('كلمة المرور غير صالحة', 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف.');
+          // Check for missing fields
+          if (!email || !password || !firstName || !lastName || !phoneNumber || !birthdate || !city) {
+            Alert.alert('حقول مفقودة', 'يرجى ملء جميع الحقول المطلوبة');
             return;
-            }*/
-    
-            // Validate phone number format
-            if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
-                Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
-                return;
-            }
-
-            // Check if the username is in English
-            const englishRegex = /^[a-zA-Z0-9]+$/;
-            if (!englishRegex.test(username)) {
-                Alert.alert('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية فقط');
-                return;
-            }
-
-            // Check if the username is available
-            const usersRef = collection(db, 'users');
-            const querySnapshot = await getDocs(query(usersRef, where('username', '==', username)));
-    
-            if (!querySnapshot.empty) {
-                // Username already exists
-                Alert.alert('اسم المستخدم مستخدم بالفعل', 'يرجى اختيار اسم مستخدم آخر.');
-                return;
-            }
-    
-            // Create user with email and password
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-            // If user is successfully created, save additional data to Firestore
-            if (userCredential && userCredential.user) {
-                await addDoc(collection(db, 'users'), {
-                    uid: userCredential.user.uid,
-                    firstName,
-                    lastName,
-                    username,
-                    email,
-                    phoneNumber,
-                    birthdate,
-                    city,
-                });
-    
-                // Reset form after successful sign up
-                setUsername('');
-                setEmail('');
-                setPassword('');
-                setFirstName('');
-                setLastName('');
-                setPhoneNumber('');
-                setBirthdate('');
-                setCity('');
-                Alert.alert('تسجيل', 'تم إنشاء الحساب بنجاح');
-                navigation.navigate('ConnectScreen');
-            }
+          }
+      
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            Alert.alert('بريد إلكتروني غير صحيح', 'يرجى استخدام بريد إلكتروني صحيح');
+            return;
+          }
+      
+          // Validate phone number format
+          if (phoneNumber.length !== 10 || !phoneNumber.startsWith('05')) {
+            Alert.alert('رقم هاتف غير صحيح', 'يجب أن يتكون رقم الهاتف من 10 أرقام ويبدأ بـ "05"');
+            return;
+          }
+      
+          // Check if phone number is already in use
+          const phoneNumberRef = collection(db, 'users');
+          const phoneQuerySnapshot = await getDocs(query(phoneNumberRef, where('phoneNumber', '==', phoneNumber)));
+          if (!phoneQuerySnapshot.empty) {
+            Alert.alert('رقم الجوال مستخدم بالفعل', 'يرجى اختيار رقم جوال آخر.');
+            return;
+          }
+      
+          // Check if the username is in English
+          const englishRegex = /^[a-zA-Z0-9]+$/;
+          if (!englishRegex.test(username)) {
+            Alert.alert('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية فقط');
+            return;
+          }
+      
+          // Check if the username is available
+          const usernameRef = collection(db, 'users');
+          const usernameQuerySnapshot = await getDocs(query(usernameRef, where('username', '==', username)));
+          if (!usernameQuerySnapshot.empty) {
+            Alert.alert('اسم المستخدم مستخدم بالفعل', 'يرجى اختيار اسم مستخدم آخر.');
+            return;
+          }
+      
+          // Check password complexity requirements
+          const passwordComplexityMet = passwordChecklist.hasUppercase &&
+            passwordChecklist.hasLowercase &&
+            passwordChecklist.hasNumber &&
+            passwordChecklist.hasSpecialChar &&
+            passwordChecklist.isLengthValid;
+      
+          if (!passwordComplexityMet) {
+            Alert.alert(
+              'تسجيل',
+              'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز خاص، وتكون على الأقل 8 أحرف'
+            );
+            return;
+          }
+      
+          // Create user with email and password
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+          // If user is successfully created, save additional data to Firestore
+          if (userCredential && userCredential.user) {
+            await addDoc(collection(db, 'users'), {
+              uid: userCredential.user.uid,
+              firstName,
+              lastName,
+              username,
+              email,
+              phoneNumber,
+              birthdate,
+              city,
+            });
+      
+            // Reset form after successful sign up
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setFirstName('');
+            setLastName('');
+            setPhoneNumber('');
+            setBirthdate('');
+            setCity('');
+            Alert.alert('تسجيل', 'تم إنشاء الحساب بنجاح');
+            navigation.navigate('ConnectScreen');
+          }
         } catch (error) {
-            console.error('Error creating user:', error.message);
-            let errorMessage = error.message;
-            if (errorMessage.includes('auth/email-already-in-use')) {
-                errorMessage = 'البريد الإلكتروني مستخدم بالفعل';
-            } else if (errorMessage.includes('auth/invalid-email')) {
-                errorMessage = 'يرجى استخدام بريد إلكتروني صحيح';
-            }else if (errorMessage.includes('auth/weak-password')) {
-                errorMessage = 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف';
-            }
-            Alert.alert('تسجيل', errorMessage);
-        }// the password message is dublicated just in case
-    };
+          console.error('Error creating user:', error.message);
+          let errorMessage = error.message;
+          if (errorMessage.includes('auth/email-already-in-use')) {
+            errorMessage = 'البريد الإلكتروني مستخدم بالفعل';
+          } else if (errorMessage.includes('auth/invalid-email')) {
+            errorMessage = 'يرجى استخدام بريد إلكتروني صحيح';
+          } else if (errorMessage.includes('auth/weak-password')) {
+            errorMessage = 'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز، وتكون على الأقل 8 أحرف';
+          }
+          Alert.alert('تسجيل', errorMessage);
+        }
+      };
 
     const [isCityDropdownVisible, setIsCityDropdownVisible] = useState(false);
 
@@ -210,8 +225,8 @@ export default function SignUpScreen() {
         const minDate = new Date(currentDate.getFullYear() - 15, currentDate.getMonth(), currentDate.getDate());
         return minDate;
     };
-
     const handlePasswordChange = (value) => {
+        // Update password state
         setPassword(value);
     
         // Update password checklist
@@ -220,25 +235,29 @@ export default function SignUpScreen() {
         const hasNumber = /[0-9]/.test(value);
         const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\|\-=]/.test(value);
         const isLengthValid = value.length >= 8;
+        
+        // Ensure at least one uppercase letter is present
+        const hasValidUppercase = hasUppercase;
     
+        // Update password checklist state
         setPasswordChecklist({
-            hasUppercase,
+            hasUppercase: hasValidUppercase,
             hasLowercase,
             hasNumber,
             hasSpecialChar,
             isLengthValid,
         });
     
-        // Log password and checklist for debugging
-        console.log("Password:", value);
-        console.log("Password Checklist:", {
-            hasUppercase,
-            hasLowercase,
-            hasNumber,
-            hasSpecialChar,
-            isLengthValid,
-        });
+        // Check if all criteria are met
+        const isValidPassword = hasValidUppercase && hasLowercase && hasNumber && hasSpecialChar && isLengthValid;
+    
+        // Update the UI or perform actions based on password validity
+        if (!isValidPassword) {
+            // Password is not valid, you can show an error message or take appropriate action
+        }
     };
+    
+    
     
     
     
@@ -277,22 +296,16 @@ export default function SignUpScreen() {
                         onChangeText={value => setEmail(value)}
                         placeholder='ادخل بريدك الالكتروني'
                     />
-                   { /* <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
-                   <TextInput
-                        style={styles.input}
-                        secureTextEntry
-                        value={password}
-                        onChangeText={value => setPassword(value)}
-                        placeholder='ادخل كلمة المرور'
-                    />*/}
+                 
                     <Text style={styles.label}>كلمة المرور<Text style={styles.required}> *</Text></Text>
-                        <TextInput
-                            style={styles.input}
-                            secureTextEntry
-                            value={password}
-                            onChangeText={handlePasswordChange}
-                            placeholder='ادخل كلمة المرور'
-                        />
+                    <TextInput
+    style={styles.input}
+    secureTextEntry
+    value={password}
+    onChangeText={handlePasswordChange}
+    placeholder='ادخل كلمة المرور'
+/>
+
 
                         {/* Password checklist */}
                         <View style={styles.passwordChecklist}>
