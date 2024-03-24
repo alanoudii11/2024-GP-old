@@ -20,7 +20,7 @@ export default function ConnectScreen() {
                     <View style={styles.texts}>
                         <Text style={styles.headerText}>مرحبا!</Text>
                         <Text style={styles.subHeaderText}>
-                            قم بربط الجهاز للوصول لجميع خدمات مرشد والبدء بإدارة منزلك
+                            قم بربط الجهاز للوصول إلى جميع خدمات مرشد والبدء بإدارة منزلك
                         </Text>
                         </View>
                         <TextInput
