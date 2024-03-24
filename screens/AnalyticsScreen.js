@@ -114,7 +114,11 @@ export default function AnalyticsScreen() {
     <View style={styles.container}>
       <TopNavBar />
       <ScrollView style={styles.scrollViewStyle}>
-      <Text style={styles.goalText}>تابع تقدمك نحو هدفك!</Text>
+        <View style={styles.goalIntro}>
+        <Image source={require('../assets/icons/editGoal.png')} style={styles.editIcon} />
+        <Text style={styles.goalText}>تابع تقدمك نحو هدفك!</Text>
+        </View>
+      
       <View style={styles.goalContainer}>
       <Text style={styles.goalDescription}>
           هدفك هو تقليل فاتورتك إلى{' '}
@@ -323,7 +327,7 @@ const styles = StyleSheet.create({
     color: '#000',
     marginVertical: 20,
     textAlign: 'right',
-    marginHorizontal: 20,
+    //marginHorizontal: 20,
     color: '#143638', 
 
   },
@@ -353,8 +357,22 @@ const styles = StyleSheet.create({
     width:70,
     height:50,
     alignSelf: 'center'
+  },
 
-  }
+  editIcon: {
+    width:30,
+    height:30,
+    alignSelf: 'center',
+    marginLeft:130
+
+
+  },
+goalIntro:{
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  justifyContent: 'space-between',
+  marginHorizontal: 20,
+}
 });
 
 
