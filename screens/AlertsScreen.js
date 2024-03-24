@@ -31,8 +31,8 @@ export default function AlertsScreen() {
       <Icons.ExclamationCircleIcon size={24} style={styles.icon} />
     </View>
     <View style={styles.dateTimeContainer}>
-      <Text style={styles.dateTimeText}>Date: {getCurrentDate()}</Text>
-      <Text style={styles.dateTimeText}>Time: {getCurrentTime()}</Text>
+      <Text style={styles.dateTimeText}>{getCurrentDate()}</Text>
+      <Text style={styles.dateTimeText}>{getCurrentTime()}</Text>
     </View>
     <View style={styles.buttonContainer}>
     </View>
@@ -62,8 +62,8 @@ const getCurrentTime = () => {
         <Icons.ExclamationCircleIcon size={24} style={styles.icon} />
       </View>
       <View style={styles.dateTimeContainer}>
-        <Text style={styles.dateTimeText}>Date: {item.date}</Text>
-        <Text style={styles.dateTimeText}>Time: {item.time}</Text>
+        <Text style={styles.dateTimeText}>{item.date}</Text>
+        <Text style={styles.dateTimeText}>{item.time}</Text>
       </View>
       <View style={styles.buttonContainer}>
       </View>
