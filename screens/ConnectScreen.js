@@ -20,14 +20,14 @@ export default function ConnectScreen() {
                     <View style={styles.texts}>
                         <Text style={styles.headerText}>مرحبا!</Text>
                         <Text style={styles.subHeaderText}>
-                            قم بربط الجهاز للوصول لجميع خدمات مرشد والبدء بادارة بيتك
+                            قم بربط الجهاز للوصول لجميع خدمات مرشد والبدء بإدارة منزلك
                         </Text>
                         </View>
                         <TextInput
                             style={styles.input}
                             value={serialNumber}
                             onChangeText={setSerialNumber}
-                            placeholder="ادخل الرقم التسلسلي الموجود أسفل الجهاز"
+                            placeholder="أدخل الرقم التسلسلي الموجود أسفل الجهاز"
                             placeholderTextColor="black"
                         />
                     
