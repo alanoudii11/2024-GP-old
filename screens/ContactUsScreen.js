@@ -17,16 +17,25 @@ export default function ContactUsScreen() {
 
     const sendMessageToFirestore = async () => {
       try {
-          if (message.trim() === "") {
-              Alert.alert("Error", "Please enter a message");
-              return;
-          }
+        const currentUser = auth.currentUser;
 
-          // Add message to Firestore collection
-          await addDoc(collection(db, 'messages'), {
-              message: message.trim(),
-              timestamp: serverTimestamp(),
-          });
+        if (!currentUser) {
+          console.error("User not authenticated");
+          return;
+        }
+    
+        const userId = currentUser.uid;
+        //const username = currentUser.usrname;
+        const userEmail = currentUser.email;
+    
+        // Add message to Firestore collection along with user information
+        await addDoc(collection(db, 'messages'), {
+          userId,
+          //username,
+          userEmail,
+          message: message.trim(),
+          timestamp: serverTimestamp(),
+        });
 
           Alert.alert("تم بنجاح", "تم إرسال رسالتك بنجاح!");
           setMessage(""); // Clear message input
