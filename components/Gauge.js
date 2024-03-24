@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import { View, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
@@ -32,9 +32,9 @@ const Gauge = ({ value }) => {
     <View style={styles.container}>
       <Svg width={gaugeWidth} height={gaugeHeight}>
         <Path d={getPath()} fill="#ccc" />
-        {/* Set background circle color to gray */}
+       
         <Path d={getPath()} fill="transparent" stroke={gaugeStrokeColor} strokeWidth={2} />
-        {/* Set gauge line stroke color dynamically */}
+       
       </Svg>
     </View>
   );
@@ -48,4 +48,48 @@ const styles = StyleSheet.create({
 });
 
 export default Gauge;
+*/
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import Svg, { Path } from "react-native-svg";
 
+const Gauge = ({ percentage }) => {
+  const gaugeWidth = 100;
+  const gaugeHeight = 75;
+  const gaugeStrokeColor = 'green'; 
+
+  const getPath = () => {
+    const x = gaugeWidth / 2;
+    const y = gaugeHeight / 2;
+    const radius = gaugeHeight / 2.1;
+
+    // Background circle path
+    const backgroundCircle = `M${x},${y} m${-radius},0 a${radius},${radius} 0 1,0 ${radius * 2},0 a${radius},${radius} 0 1,0 ${-radius * 2},0`;
+
+    // Gauge line path
+    const endPointX = x + Math.cos((150 * Math.PI) / 180) * radius;
+    const endPointY = y - Math.sin((150 * Math.PI) / 180) * radius;
+    const gaugePath = `M${x},${y}
+            L${endPointX},${endPointY}`;
+
+    return `${backgroundCircle} ${gaugePath}`;
+  };
+
+  return (
+    <View style={styles.container}>
+      <Svg width={gaugeWidth} height={gaugeHeight}>
+        <Path d={getPath()} fill="#ccc" />
+        <Path d={getPath()} fill="transparent" stroke={gaugeStrokeColor} strokeWidth={3} />
+      </Svg>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+export default Gauge;
