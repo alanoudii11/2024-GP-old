@@ -109,7 +109,7 @@ export default function AnalyticsScreen() {
     return chartComponent;
   };  
   
- 
+  const fuelLevel = 75;
   return (
     <View style={styles.container}>
       <TopNavBar />
@@ -145,8 +145,13 @@ export default function AnalyticsScreen() {
               <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
-            <Gauge value={25} />
-            </View>
+  <Text style={styles.infoText}>الاستهلاك </Text>
+  <Gauge percentage={fuelLevel} />
+  <View style={styles.textBelowGauge}>
+  <Text style={styles.textBelowGaugeText}>منخفض</Text>
+      <Text style={styles.textBelowGaugeText}>عالي</Text>
+    </View>
+</View>
           </View>
         </View>
         <View style={styles.dataContainer}>
@@ -332,6 +337,15 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 20,
     textAlign: 'right',
+  },
+  textBelowGauge: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+  },
+  textBelowGaugeText: {
+    color: "#fff",
+    fontSize: 14,
   },
 });
 
