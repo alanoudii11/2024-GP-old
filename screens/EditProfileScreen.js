@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   },
   
   greetingText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#143638',
     
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 16,
     color: '#143638', // Adjust color as needed
-    marginTop: 20,
+    marginTop: 15,
   
   },
 

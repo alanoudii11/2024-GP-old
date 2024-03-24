@@ -1,5 +1,5 @@
 import React, { useState } from "react"; 
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image} from 'react-native'
 import * as Icons from "react-native-heroicons/solid";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut } from "firebase/auth";
@@ -146,7 +146,7 @@ export default function AnalyticsScreen() {
             </View>
             <View style={styles.infoBox}>
   <Text style={styles.infoText}>الاستهلاك </Text>
-  <Gauge percentage={fuelLevel} />
+  <Image source={require('../assets/icons/meter.png')} style={styles.meterIcon} />
   <View style={styles.textBelowGauge}>
   <Text style={styles.textBelowGaugeText}>منخفض</Text>
       <Text style={styles.textBelowGaugeText}>عالي</Text>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
 
   },ContainerText:{
    
-    marginHorizontal:25,
+    marginHorizontal:20,
   },
   conDescription:{
     fontSize: 16,
@@ -324,6 +324,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     textAlign: 'right',
     marginHorizontal: 20,
+    color: '#143638', 
+
   },
   goalContainer: {
     backgroundColor: 'rgba(192, 192, 192, 0.4)',
@@ -347,6 +349,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
   },
+  meterIcon: {
+    width:70,
+    height:50,
+    alignSelf: 'center'
+
+  }
 });
 
 

@@ -8,16 +8,64 @@ import TopNavBar2 from '../navigation/TopNavBar2';
 import BottomNavBar from '../navigation/BottomNavBar';
 import { themeColors } from '../theme';
 import { EmailAuthProvider, updatePassword, reauthenticateWithCredential } from "firebase/auth"; // Import necessary Firebase auth methods
+import * as Icons from 'react-native-heroicons/outline';
+import { KeyboardAvoidingView } from 'react-native';
 
 const ChangePasswordScreen = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordChecklist, setPasswordChecklist] = useState({
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+    isLengthValid: false,
+  });
   const navigation = useNavigation();
 
-  const handlePasswordChange = async () => {
+  const handlePasswordChange = (value) => {
+    // Update password state
+    setNewPassword(value);
+
+    // Update password checklist
+    const hasUppercase = /[A-Z]/.test(value);
+    const hasLowercase = /[a-z]/.test(value);
+    const hasNumber = /[0-9]/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\|\-=]/.test(value);
+    const isLengthValid = value.length >= 8;
+
+    // Ensure at least one uppercase letter is present
+    const hasValidUppercase = hasUppercase;
+
+    // Update password checklist state
+    setPasswordChecklist({
+      hasUppercase: hasValidUppercase,
+      hasLowercase,
+      hasNumber,
+      hasSpecialChar,
+      isLengthValid,
+    });
+  };
+
+  const handleChangePasswordPress = async () => {
     if (newPassword !== confirmPassword) {
       Alert.alert("خطأ", "تأكد من تطابق كلمة المرور");
+      return;
+    }
+
+    // Check password complexity
+    const passwordComplexityMet = passwordChecklist.hasUppercase &&
+      passwordChecklist.hasLowercase &&
+      passwordChecklist.hasNumber &&
+      passwordChecklist.hasSpecialChar &&
+      passwordChecklist.isLengthValid;
+
+    if (!passwordComplexityMet) {
+      Alert.alert(
+        'تسجيل',
+        'يجب أن تحتوي كلمة المرور على حرف كبير وصغير ورقم ورمز خاص، وتكون على الأقل 8 أحرف'
+      );
       return;
     }
 
@@ -38,6 +86,7 @@ const ChangePasswordScreen = () => {
       Alert.alert("خطأ", "فشل في تغيير كلمة المرور. يرجى المحاولة مرة أخرى.");
     }
   };
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -61,7 +110,7 @@ const ChangePasswordScreen = () => {
           secureTextEntry
           placeholder="كلمة المرور الجديدة"
           value={newPassword}
-          onChangeText={setNewPassword}
+          onChangeText={handlePasswordChange}
         />
         <TextInput
           style={styles.input}
@@ -70,7 +119,17 @@ const ChangePasswordScreen = () => {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
-        <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
+
+         {/* Password checklist */}
+         <View style={styles.passwordChecklist}>
+            <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasUppercase ? 'green' : 'gray'} />} text="يحتوي على حرف كبير" isCompleted={passwordChecklist.hasUppercase} />
+            <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasLowercase ? 'green' : 'gray'} />} text="يحتوي على حرف صغير" isCompleted={passwordChecklist.hasLowercase} />
+            <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasNumber ? 'green' : 'gray'} />} text="يحتوي على رقم" isCompleted={passwordChecklist.hasNumber} />
+            <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.hasSpecialChar ? 'green' : 'gray'} />} text="يحتوي على رمز خاص" isCompleted={passwordChecklist.hasSpecialChar} />
+            <ChecklistItem icon={<Icons.CheckCircleIcon stroke={passwordChecklist.isLengthValid ? 'green' : 'gray'} />} text="طوله 8 أحرف على الأقل" isCompleted={passwordChecklist.isLengthValid} />
+          </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleChangePasswordPress}>
           <Text style={styles.buttonText}>تغيير كلمة المرور</Text>
         </TouchableOpacity>
       </View>
@@ -81,6 +140,15 @@ const ChangePasswordScreen = () => {
     </View>
   );
 };
+
+// Define ChecklistItem component here
+const ChecklistItem = ({ icon, text, isCompleted }) => (
+  <View style={[styles.checklistItem, { flexDirection: 'row-reverse' }]}>
+    {icon}
+    <Text style={[styles.checklistText, { color: isCompleted ? 'green' : 'gray' }]}>{text}</Text>
+  </View>
+);
+
 
 const styles = StyleSheet.create({
   container: {
@@ -132,7 +200,7 @@ const styles = StyleSheet.create({
   },
   
   greetingText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#143638',
     
@@ -141,7 +209,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 16,
     color: '#143638', // Adjust color as needed
-    marginTop: 20,
+    marginTop: 15,
   
   },
 

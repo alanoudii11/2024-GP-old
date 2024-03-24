@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   descriptionText: {
-    fontSize: 16,
+    fontSize: 20,
     color: 'white', 
     textAlign: 'right',
     //marginRight: 10,

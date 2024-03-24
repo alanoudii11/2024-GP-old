@@ -125,9 +125,9 @@ export default function LoginScreen() {
       } catch (err) {
         console.log('got error: ', err.message);
         let msg = err.message;
-        if (msg.includes('invalid-login-credentials')) msg = "Invalid email or password";
-        if (msg.includes('auth/invalid-email')) msg = "Invalid email or password";
-        Alert.alert('Sign In', msg);
+        if (msg.includes('invalid-login-credentials')) msg = "بريد إلكتروني أو كلمة مرور غير صحيحة";
+        if (msg.includes('auth/invalid-email')) msg = "بريد إلكتروني أو كلمة مرور غير صحيحة";
+        Alert.alert('خطأ', msg);
       }
     }
   }
