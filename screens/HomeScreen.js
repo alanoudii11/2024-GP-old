@@ -18,15 +18,17 @@ import Kwh_YearlyChart from '../charts/Kwh_YearlyChart';
 
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(4); //default selector bar choice is مباشر
   const options = ['سنة','شهر','أسبوع','يوم', 'مباشر'];
   const displayTextMapping = {
-    0: 'معدل استهلاك الكهرباء لسنة ٢٠٢٣\n(كيلو واط/ساعة)',
-    1: 'معدل استهلاك الكهرباء لشهر مارس ٢٠٢٤\n(كيلو واط/ساعة)',
-    2: 'معدل استهلاك الكهرباء الأسبوعي\n(كيلو واط/ساعة)',
-    3: 'معدل استهلاك كهرباء اليوم\n(كيلو واط/ساعة)',
+    0: 'معدل استهلاك الكهرباء لسنة 2024\n(كيلو واط/ساعة)',
+    1: 'معدل استهلاك الكهرباء لشهر مارس 2024\n(كيلو واط/ساعة)',
+    2: 'معدل استهلاك الكهرباء الأسبوعي \n من الأحد 24/3/2024 إلى السبت 30/3/2024 \n (كيلو واط/ساعة)',
+    3: ` معدل استهلاك الكهرباء يوم الاثنين 25/3/2024 \n (كيلو واط/ساعة)`,
     4: 'معدل استهلاك الكهرباء المباشر\n(كيلو واط/ساعة)'
   };
+//     2: 'معدل استهلاك الكهرباء الأسبوعي (كيلو واط/ساعة) \n من الأحد 24/3/2024 إلى السبت 30/3/2024',
 
   // Displays a chart header based on the choice chosen from the selector bar
   const getDisplayText = (index) => displayTextMapping[index];
@@ -34,14 +36,19 @@ export default function HomeScreen() {
   useEffect(() => {
     const updateDateAndTime = () => {
       const now = new Date();
+      const daysOfWeek = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      const day = daysOfWeek[now.getDay()];
       const date = now.getDate();
       const month = now.getMonth() + 1;
       const year = now.getFullYear();
       const hours = now.getHours();
       const min = now.getMinutes().toString().padStart(2, '0'); 
       const sec = now.getSeconds().toString().padStart(2, '0'); 
-      setCurrentDate(
-        `${date}/${month}/${year} ${hours}:${min}:${sec}`
+      setCurrentDate (
+        `التاريخ: ${day}، ${date}/${month}/${year}`
+      );
+      setCurrentTime (
+        `    الوقت: ${hours}:${min}:${sec}`
       );
     };
 
@@ -57,17 +64,17 @@ export default function HomeScreen() {
       <ScrollView style={styles.scrollViewStyle}>
         <View style={styles.upperContainer}>
           <View style={styles.dateContainer}>
-            <Text style={styles.dateStyle}>{currentDate}</Text>
+            <Text style={styles.dateStyle}>{currentDate}{currentTime}</Text>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>التكلفة</Text>
-              <Text style={styles.largeInfo}>3.6</Text>
+              <Text style={styles.largeInfo}>1.15</Text>
               <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>اليوم</Text>
-              <Text style={styles.largeInfo}>72</Text>
+              <Text style={styles.largeInfo}>23</Text>
               <Text style={styles.infoText}>كيلو واط / ساعة</Text>
             </View>
           </View>
