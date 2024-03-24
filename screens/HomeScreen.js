@@ -9,19 +9,23 @@ import TopNavBar from '../navigation/TopNavBar';
 import BottomNavBar from '../navigation/BottomNavBar';
 import { themeColors } from '../theme';
 import * as Icons from "react-native-heroicons/solid";
-import RealTimeChart from '../charts/RealTimeChart'; 
 import SelectorBar from '../components/SelectorBar'; 
+import Kwh_RealTimeChart from '../charts/Kwh_RealTimeChart'; 
+import Kwh_DailyChart from '../charts/Kwh_DailyChart';
+import Kwh_WeeklyChart from '../charts/Kwh_WeeklyChart';
+import Kwh_MonthlyChart from '../charts/Kwh_MonthlyChart';
+import Kwh_YearlyChart from '../charts/Kwh_YearlyChart';
 
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(4); //default selector bar choice is مباشر
   const options = ['سنة','شهر','أسبوع','يوم', 'مباشر'];
   const displayTextMapping = {
-    0: 'استهلاك الكهرباء السنوي (كيلو واط/ساعة)',
-    1: 'استهلاك الكهرباء الشهري (كيلو واط/ساعة)',
-    2: 'استهلاك الكهرباء الأسبوعي (كيلو واط/ساعة)',
-    3: 'استهلاك الكهرباء اليومي (كيلو واط/ساعة)',
-    4: 'استهلاك الكهرباء المباشر (كيلو واط/ساعة)'
+    0: 'معدل استهلاك الكهرباء لسنة ٢٠٢٣\n(كيلو واط/ساعة)',
+    1: 'معدل استهلاك الكهرباء لشهر مارس ٢٠٢٤\n(كيلو واط/ساعة)',
+    2: 'معدل استهلاك الكهرباء الأسبوعي\n(كيلو واط/ساعة)',
+    3: 'معدل استهلاك كهرباء اليوم\n(كيلو واط/ساعة)',
+    4: 'معدل استهلاك الكهرباء المباشر\n(كيلو واط/ساعة)'
   };
 
   // Displays a chart header based on the choice chosen from the selector bar
@@ -51,19 +55,19 @@ export default function HomeScreen() {
     <View style={{ flex: 1 }}>
       <TopNavBar />
       <ScrollView style={styles.scrollViewStyle}>
-      <View style={styles.upperContainer}>
+        <View style={styles.upperContainer}>
           <View style={styles.dateContainer}>
             <Text style={styles.dateStyle}>{currentDate}</Text>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>التكلفة</Text>
-              <Text style={styles.largeInfo}>٦٤</Text>
+              <Text style={styles.largeInfo}>3.6</Text>
               <Text style={styles.infoText}>ريال سعودي</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>اليوم</Text>
-              <Text style={styles.largeInfo}>٦٤</Text>
+              <Text style={styles.largeInfo}>72</Text>
               <Text style={styles.infoText}>كيلو واط / ساعة</Text>
             </View>
           </View>
@@ -78,16 +82,20 @@ export default function HomeScreen() {
           />
           <Text style={styles.chartHeaderText}>
             {getDisplayText(selectedOptionIndex)}
-          </Text>
-          {selectedOptionIndex === 4 && (
-            <RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />
-          )}
+          </Text> 
+          {selectedOptionIndex === 4 && <Kwh_RealTimeChart apiUrl="http://127.0.0.1:5000/api/getRecentUsage" />} 
+          {selectedOptionIndex === 3 && <Kwh_DailyChart />}
+          {selectedOptionIndex === 2 && <Kwh_WeeklyChart />} 
+          {selectedOptionIndex === 1 && <Kwh_MonthlyChart />}
+          {selectedOptionIndex === 0 && <Kwh_YearlyChart />}
         </View>
       </ScrollView>
       <BottomNavBar />
     </View>
   );
-          }
+  
+    }
+    
 const styles = StyleSheet.create({
   upperContainer: {
     backgroundColor: '#143638',
@@ -146,6 +154,8 @@ infoText: {
 largeInfo: {
     fontSize: 36,
     textAlign: 'center',
+    color: '#fff',
+    fontWeight: '600',
 }, 
 chartHeaderText: {
   fontSize: 16,
