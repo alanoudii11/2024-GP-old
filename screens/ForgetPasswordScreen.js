@@ -25,7 +25,7 @@ const ForgetPasswordScreen = () => {
       setIsPasswordReset(true);
       // Display success message as an alert
       Alert.alert(
-        "تم إرسال رابط إعادة تعيين كلمة المرور لبريدك الإلكتروني بنجاح."
+        "إذا كان بريدك الإلكتروني مسجلا لدينا، تم إرسال رابط إعادة تعيين كلمة المرور إليه بنجاح."
       );
     } catch (error) {
       console.error("حدث خطأ، حاول مرة أخرى", error);
