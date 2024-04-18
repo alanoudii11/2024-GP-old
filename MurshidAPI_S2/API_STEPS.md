@@ -1,4 +1,4 @@
-<b>FIREBASE (Done only once):<b>
+*STEP 1: FIREBASE (Done only once):*
 
 1. Go to https://firebase.google.com/
 2. Sign in to Murshid username and password. 
@@ -12,8 +12,9 @@
 10. Save FIREBASE SERVICE ACCOUNT file somewhere safe (a folder that you won’t ever delete). 
 11. Save the FIREBASE SERVICE ACCOUNT  file path.
 
+----------------------------------------------------------------------------------
 
-<b>API.PY CODE (Done every single time you run the code):<b>
+*STEP 2: API.PY CODE (Done every single time you run the code):*
 
 1. Download the updated MurshidAPI_S2 code from GitHub. 
 2. Open MurshidAPI_S2 folder in VSCode. 
