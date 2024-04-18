@@ -1,11 +1,13 @@
 #---------------api.py---------------
 
-# 1. In the terminal run: export FIREBASE_SERVICE_ACCOUNT_FILE="/path/to/your/service_account.json"
+# 1. In the terminal run: 
+#    export FIREBASE_SERVICE_ACCOUNT_FILE="/path/to/your/service_account.json"
 
 # 2. Ensure that you have set the FIREBASE_SERVICE_ACCOUNT_FILE environment variable correctly with the path to your Firebase service account JSON file. 
 #    echo $FIREBASE_SERVICE_ACCOUNT_FILE 
 
-# 3. Run this in terminal: python api.py or python3 api.py (depends on python version).
+# 3. Run this in terminal: 
+#    python3 api.py or python api.py (depends on python version).
 
 # Must download pyemvue library first. Use this command: pip install Flask or pip3 install Flask (depends on python version).
 
