@@ -8,7 +8,7 @@
 6. From project overview (on the side menu) click the settings icon.
 7. Click project settings. 
 8. Select service accounts 
-9. Click generate new private key (from now on call it FIREBASE CREDENTIALS file). 
+9. Click generate new private key (from now on referred to as FIREBASE SERVICE ACCOUNT). 
 10. Save FIREBASE SERVICE ACCOUNT file somewhere safe (a folder that you won’t ever delete). 
 11. Save the FIREBASE SERVICE ACCOUNT  file path.
 
