@@ -1,4 +1,4 @@
-*STEP 1: FIREBASE (Done only once):*
+**STEP 1: FIREBASE (Done only once):**
 
 1. Go to https://firebase.google.com/
 2. Sign in to Murshid username and password. 
@@ -14,7 +14,7 @@
 
 ----------------------------------------------------------------------------------
 
-*STEP 2: API.PY CODE (Done every single time you run the code):*
+**STEP 2: API.PY CODE (Done every single time you run the code):**
 
 1. Download the updated MurshidAPI_S2 code from GitHub. 
 2. Open MurshidAPI_S2 folder in VSCode. 
