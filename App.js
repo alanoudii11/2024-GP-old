@@ -1,16 +1,121 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AppNavigation from './navigation/appNavigation';
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform } from 'react-native';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import HomeScreen from './screens/HomeScreen';
 
 
-// const Tab = createBottomTabNavigator();
+
+// Define the notification handler
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+// Function to send push notifications
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+// Function to handle registration errors
+function handleRegistrationError(errorMessage) {
+  alert('Error: '+errorMessage);
+  throw new Error(errorMessage);
+}
+
+// Function to register for push notifications
+async function registerForPushNotificationsAsync() {
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      handleRegistrationError('Permission not granted to get push token for push notification!');
+      return;
+    }
+    // const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+    const projectId = '4c1322b0-9c03-4234-8594-dcaf3d011ccc';
+    if (!projectId) {
+      handleRegistrationError('Project ID not found');
+    }
+    try {
+      const pushTokenString = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+      console.log(pushTokenString);
+      return pushTokenString;
+    } catch (e) {
+      handleRegistrationError(`${e}`);
+    }
+  } else {
+    handleRegistrationError('Must use physical device for push notifications');
+  }
+}
+
 
 
 export default function App() {
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+const [notification, setNotification] = useState(undefined);
+const notificationListener = useRef();
+const responseListener = useRef();
+
+useEffect(() => {
+  registerForPushNotificationsAsync()
+    .then(async (token) =>{
+      // alert('token: '+token)
+      await AsyncStorage.setItem('token', token);
+      setExpoPushToken(token || '')})
+    .catch((error) => setExpoPushToken(`${error}`));
+
+  notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+    setNotification(notification);
+  });
+
+  responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+    console.log(response);
+  });
+
+  return () => {
+    notificationListener.current && Notifications.removeNotificationSubscription(notificationListener.current);
+    responseListener.current && Notifications.removeNotificationSubscription(responseListener.current);
+  };
+}, []);
+
+
   return (
     <AppNavigation />
   );
