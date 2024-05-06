@@ -10,10 +10,10 @@ import React from 'react';
     const navigation = useNavigation();
     
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       <TopNavBar2/>
   
-        <View style={styles.container}>
+        <View style={styles.innerContainer}>
           <View style={styles.formContainer}>
           <ScrollView contentContainerStyle={styles.scrollContent}>
             <View style={{ alignItems: 'flex-end' }}>
@@ -46,16 +46,18 @@ import React from 'react';
               <Text style={styles.stepDescription}>بمجرد توصيل جهاز مراقبة الطاقة بنجاح وتكوينه، قم بإعادة وضع غطاء لوحة التوزيع الكهربائية.</Text>
             </View>
             </View>
-            </ScrollView>
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.navigate('Home')}>
               {/*<Icons.PlusCircleIcon size={30} color="black" style={{ marginRight:15 }} />*/}
               <Text style={styles.buttonText}>ربط الجهاز</Text>
             </TouchableOpacity>
+            </ScrollView>
+            
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
   
@@ -64,18 +66,23 @@ import React from 'react';
       flex: 1,
       backgroundColor: themeColors.bg,
     },
+    innerContainer:{
+      flex: 1,
+      //marginBottom:20,
+
+    },
+
     formContainer: {
       flex: 1,
       paddingHorizontal: 20,
       paddingTop: 20,
+      //marginBottom :20,
     },
     textContainer: {
-      
-      marginBottom: 25,
-      
+      marginBottom: 20,
     },
     stepText: {
-      fontSize: 20,
+      fontSize: 17,
       fontWeight: 'bold',
       marginBottom: 6,
       textAlign: 'right',
@@ -95,6 +102,8 @@ import React from 'react';
       flexDirection: 'row',
       backgroundColor: themeColors.lightb,
       marginTop:20,
+      marginBottom: 40,
+
     },
     buttonText: {
       fontSize: 20,
