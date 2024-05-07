@@ -47,6 +47,7 @@ const SelectorBar = ({ options, selectedIndex, onSelect }) => {
     selectedOption: {
       backgroundColor: '#143638',
       borderRadius: 32,
+      marginHorizontal:5,
     },
     text: {
       fontSize: 16,
