@@ -7,12 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { themeColors } from '../theme';
 import * as Icons from 'react-native-heroicons/outline';
 import { auth} from '../config/firebase'
-import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import { doc, getDoc,getDocs, setDoc, addDoc, collection } from "firebase/firestore";
 import { db } from '../config/firebase';
 import { LineChart } from 'react-native-chart-kit';
 import Kwh_RealTimeChart from '../charts/Kwh_RealTimeChart';//1
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 export default function AlertsScreen() {
 
   const navigation = useNavigation();
@@ -55,6 +54,26 @@ const fetchUserAlerts = async () => {
   }
 };
 
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
     
     fetchUserAlerts();
 
@@ -92,7 +111,7 @@ const fetchUserAlerts = async () => {
         if (totalDailyUsage > 20) {
           handleHazard('hazard03');
         }
-        if (totalDailyUsage > 57) {
+        if (totalDailyUsage > 29) {
           handleHazard('hazard04');
         }
         if (totalDailyUsage > 2) {
@@ -111,27 +130,40 @@ const fetchUserAlerts = async () => {
     
     const handleHazard = async (hazardId) => {
       try {
-        const usersRef = collection(db, 'notificationsdb');
-        const querySnapshot = await getDocs(query(usersRef, where('uid', '==', auth.currentUser.uid)));
+        const userUid = auth.currentUser?.uid;
+        if (!userUid) {
+          console.error('No authenticated user available.');
+          return;
+        }
     
-        if (!querySnapshot.empty) {
-          const userData = querySnapshot.docs[0].data();
-          const expoPushToken = userData.token_id;
+        // Directly get the user's notification settings document
+        const userDocRef = doc(db, 'notificationsdb', userUid);
+        const userDocSnapshot = await getDoc(userDocRef);
     
-          if (expoPushToken) {
-            await sendPushNotification(expoPushToken);
-            const userAlertsRef = collection(db, 'userAlerts', auth.currentUser.uid, 'alerts');
-            await addDoc(userAlertsRef, {
-              hazardId: hazardId,
-              timestamp: new Date()
-            });
-          }
+        if (!userDocSnapshot.exists()) {
+          console.error('User data not found.');
+          return;
+        }
+    
+        const userData = userDocSnapshot.data();
+        console.log('userData: ', userData);
+        const expoPushToken = userData.token_id;
+    
+        if (expoPushToken) {
+          await sendPushNotification(expoPushToken);  // Assuming this function is properly defined elsewhere
+          const userAlertsRef = collection(db, 'userAlerts', userUid, 'alerts');
+          await addDoc(userAlertsRef, {
+            hazardId: hazardId,
+            timestamp: new Date()
+          });
+          console.log('Hazard alert added successfully.');
+        } else {
+          console.error('No push token available.');
         }
       } catch (error) {
         console.error('Error handling hazard:', error);
       }
     };
-    
 
     //done condition1
 
@@ -260,6 +292,4 @@ const styles = StyleSheet.create({
   },
 
 });
-
-
 
