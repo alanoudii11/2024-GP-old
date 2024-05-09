@@ -53,7 +53,7 @@ export default function SettingsScreen({route}) {
   useEffect(() => {
     // Fetch user data from Firestore
     const fetchUserData = async () => {
-      // Check if the updated first name is passed through navigation params
+      // Check if the updated first name is passed through navigation paramss
       if (route.params && route.params.updatedFirstName) {
         setFirstName(route.params.updatedFirstName);
       } else {
